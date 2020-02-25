@@ -5,8 +5,8 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="index.php">Accueil</a></li>
-                <li class="nav-item"><a class="nav-link" href="formulaire.php">Formulaire</a></li>
-                <li class="nav-item"><a class="nav-link" href="tableau.php">Tableau</a></li>
+                <li class="nav-item"><a class="nav-link" href="formulaire.php">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="liste_produit.php">Produits</a></li>
             </ul>
         </div>
     </nav>
