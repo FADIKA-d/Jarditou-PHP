@@ -66,7 +66,7 @@ if(!preg_match($adressControl,$adress)){$errors['adress'] = 'L\'adress est incor
 if(!preg_match($cityControl,$city)){$errors['city'] = 'La ville est incorrect';}
 if(!filter_var($emailControl,FILTER_VALIDATE_EMAIL)){$errors['email'] = 'L\'email est incorrect';}
 //if(!preg_match($questionControl,$question)){$errors['question'] = 'La question n\'est pas renseignée';}
-if(isset($question)){$errors['question'] = 'La question n\'est pas renseignée';}
+if(empty($question)){$errors['question'] = 'La question n\'est pas renseignée';}
 if($age>$deanOfHumanityAge){$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';}
 if($age<$majorityAge){
     if($dateOfBirth>$today) // Si l'année de naissance est antérieur à la date du jour et l'année de naissance est inférieur à l'année de naissance du doyen de l'humanité
@@ -131,7 +131,7 @@ if($age<$majorityAge){
                                     
                                 <label for="homme" class="form-check-label">Masculin</label>
                             </div>
-                            <div class=" input-group col-md-5 <?= (isset($errors['gender'])) ? 'invalid-feedback' : ''?>"><?= ($isSubmit && $errors['gender']) ? $errors['gender'] : '' ?></div>
+                            <div class=" input-group col-md-5 <?= (isset($errors['gender'])) ? 'invalid-feedback' : ''?>"><?= ($isSubmit && (isset($errors['gender']))) ? $errors['gender'] : '' ?></div>
                         </div>
                         <div class="form-group justify-content-center row">
                             <label for="dateOfBirth" class="col-md-3 col-form-label">Date de naissance* :</label>
@@ -217,7 +217,7 @@ if($age<$majorityAge){
                         <label for="agrement" class="form-check-label">J'accepte le traitement informatique de ce
                             formulaire</label>
                         <input type="checkbox" name="agrement" class="custom-control-input" id="agrement"
-                            value="agree" checked data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary" data-offstyle="default">
+                            value="agree" checked data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary" data-offstyle="danger">
                         <div class="invalid-feedback">Saisissez votre nom</div>
                     </div>
                     <div class="row d-flex justify-content-between p-0 m-0">
