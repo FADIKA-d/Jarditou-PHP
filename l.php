@@ -34,8 +34,8 @@ while ($row = $result->fetch(PDO::FETCH_OBJ))
     echo"<tr>";
     echo"<td>".$row->pro_id."</td>";
     echo"<td>".$row->pro_ref."</td>";
-    echo"<td><a href=\"products_details.php?id=".$row->pro_id."\" title=\"".$row->pro_libelle."\"></a></td>";
-    echo "<td><a href=\"products_details.php?pro_id=\".$row->pro_id.\">".$row->pro_libelle."   </a></td>";
+    
+    echo "<td><a href=\"products_details.php?pro_id=\".$row->pro_id.\">".$row->pro_libelle."</a></td>";
     echo"</tr>";
 }
  

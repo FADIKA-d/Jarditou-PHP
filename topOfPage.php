@@ -23,7 +23,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="index.php">Accueil</a></li>
                 <li class="nav-item"><a class="nav-link" href="formulaire.php">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="produit.php">Produits</a></li>
+                <li class="nav-item"><a class="nav-link" href="product_liste.php">Produits</a></li>
             </ul>
         </div>
     </nav>

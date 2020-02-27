@@ -39,7 +39,7 @@ $products = $req->fetchAll(PDO::FETCH_OBJ);
                         <td><?php echo $product->pro_photo; ?></td>
                         <td><?php echo $product->pro_id; ?></td>
                         <td><?php echo $product->pro_ref; ?></td>
-                        <td><a href="products_details.php?pro_id=<?= $product->pro_id ?>"><?php echo  $product->pro_libelle; ?></a></td>
+                        <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><?php echo  $product->pro_libelle; ?></a></td>
                         <td><?php echo $product->pro_prix; ?></td>
                         <td><?php echo $product->pro_stock; ?></td>
                         <td><?php echo $product->pro_couleur; ?></td>
@@ -52,6 +52,10 @@ $products = $req->fetchAll(PDO::FETCH_OBJ);
                 ?>
                 </tbody>
             </table>
+            <form action="">
+                <button class="btn btn-secondary"><a href="product_modif.php">Modifier</a></button>
+                <button class="btn btn-secondary"><a href="product_add.php">Ajouter</a></button>
+            </form>
         </div>
     </div>
     <?php include_once "endOfPage.php" ?>
