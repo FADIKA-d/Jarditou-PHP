@@ -19,15 +19,16 @@
 /*$requete->bindValue(":7",$sept);
 $requete->execute();
 $tableau = $requete->fetchAll();
-*/
+
 $altitude = 50;
 $requete=$db->prepare("INSERT INTO `station` (`sta_altitude`) VALUES (:altitude)");
 $requete->bindValue(":altitude",$altitude);
 if($requete->execute()){
     $success = true;
 }
-	
-
+*/
+INSERT INTO `station` (`sta_altitude`) VALUES (12);
+    
 ?>
 
 <!DOCTYPE html>
