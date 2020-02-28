@@ -20,10 +20,22 @@ $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', '
 $reqlect = ['pro_id', 'pro_ref', 'pro_cat_id', 'pro_libelle', 'pro_description', 'pro_prix', 'pro_stock', 'pro_couleur', 'pro_photo']; 
 $requete = $db->prepare("INSERT INTO `produits` (`pro_id`, `pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`, `pro_d_modif`, `pro_bloque`) VALUES (51, 25, 'barb145', 'Aramis ', '', '110.00', 2, :test, '', '2020-04-18', NULL, NULL)");
 $requete->bindValue(':test', $test);
-if($requete->execute()) 
-{
-    $succes=true;
-};
+$requete->execute(array(':pro_id' => 10));
+$ici=$requete->fetchAll();
+array(
+    `pro_id` => $pro_id,
+    `pro_cat_id`=> $pro_cat_id,
+    `pro_ref` => $pro_ref,
+    `pro_libelle` => $pro_libelle,
+    `pro_description` => $pro_description,
+    `pro_prix` => $pro_prix,
+    `pro_stock` => $pro_stock,
+    `pro_couleur` => $pro_couleur,
+    `pro_photo` => $pro_photo,
+    `pro_d_ajout` => $pro_d_ajout,
+    `pro_d_modif` => $pro_d_modif,
+    `pro_bloque` => $pro_bloque
+)
 
 ?>
 <?php include_once "topOfPage.php" ?>
