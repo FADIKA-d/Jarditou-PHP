@@ -1,12 +1,7 @@
 <?php
-$today = date("Y-m-d"); 
+$today = date("Y-m-d"); // variable contenant la date du jour
 
-    // function vide()
-    // {
-    //     echo "La case doit être renseignée";
-    // }
-    // $error = vide();
-    
+//VARIABLES DE RECUPERATION DES REPONSES DU QUESTIONNAIRE
     $lastName = $_POST['lastName'] ?? '';
     //$lastName ?? $error
     $firstName = $_POST['firstName'] ?? '';
@@ -32,51 +27,103 @@ $today = date("Y-m-d");
     //echo $submit = $_POST["submit"];
     //echo $reset = $_POST["reset"];
 
-$dateOfBirthTimestamp =strtotime($dateOfBirth); // Convertion de la date de naissance saissie en Timestamp (format de mesure de la date)
-$dateOfBirthTable = getdate($dateOfBirthTimestamp); // Converstion du Timestamp en tableau
-$yearOfBirth = $dateOfBirthTable["year"]; // Obtenir l'année de naissance
-$todayTimestamp =strtotime($today); // Convertion de la date de naissance saissie en Timestamp (format de mesure de la date)
-$dateOfTodayTable = getdate($todayTimestamp); // Converstion du Timestamp en tableau
-$yearOfToday = $dateOfTodayTable["year"];
-$majorityAge = 18; // Variable âge de la majorité
-$deanOfHumanityAge = 122; //age du doyen de l'humanité
-$adult = $yearOfToday-$majorityAge; //Variable âge d'une personne majeur
-$age = $yearOfToday-$yearOfBirth; //Variable age
 
-$lettersControl = '/^[a-z]{2,}((:?[- ][a-z]{2,})*)?$/' ;
-$genderControl ='/"femal"|"male"/';
-$zipCodeControl = '/^\d{5}$/';
-$adressControl='/^\d+\s+(bis|ter|quarter)?\s+[a-z]+\s(.)+$/';
-$cityControl ='/^\w+(([- ])\w+)*$/';
-$questionControl = '/^\w+(([- ])(\w)*+([!.?,\(\)]*))*[?.!]?$/m';
-$emailControl = filter_var($email,FILTER_SANITIZE_EMAIL);
-$dateOfBirthControl = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/';
+$dateOfBirthTimestamp =strtotime($dateOfBirth); // convertion de la date de naissance saissie en Timestamp (format de mesure de la date)
+$dateOfBirthTable = getdate($dateOfBirthTimestamp); // converstion du Timestamp en tableau
+$yearOfBirth = $dateOfBirthTable["year"]; // obtenir l'année de naissance
+$todayTimestamp =strtotime($today); // convertion de la date de naissance saissie en Timestamp (format de mesure de la date)
+$dateOfTodayTable = getdate($todayTimestamp); // converstion du Timestamp en tableau
+$yearOfToday = $dateOfTodayTable["year"];
+$majorityAge = 18; // variable âge de la majorité
+$deanOfHumanityAge = 122; //age du doyen de l'humanité
+$adult = $yearOfToday-$majorityAge; //variable âge d'une personne majeur
+$age = $yearOfToday-$yearOfBirth; //variable age
+
+//REGEX
+$lettersControl = '/^[a-z]{2,}((:?[- ][a-z]{2,})*)?$/' ; //regex : au moins deux lettres sépararés ou non par un espace ou un tiret
+$genderControl ='/"femal"|"male"/'; // regex : uniquement réponse male ou femal
+$zipCodeControl = '/^\d{5}$/'; //regex code postal
+$adressControl='/^\d+\s+(bis|ter|quarter)?\s+[a-z]+\s(.)+$/'; // regex un nombre (au moins un chiffre) suivi de l'adresse (lettres)
+$cityControl ='/^\w+(([- ])\w+)*$/'; //un ou plusieurs mots séparés par des tirets ou espaces (pouvant contenir un ou plusieurs chiffres)
+$questionControl = '/^\w+(([- ])(\w)*+([!.?,\(\)]*))*[?.!]?$/m'; //regex texte libre
+$emailControl = filter_var($email,FILTER_SANITIZE_EMAIL); //filtre email
+$dateOfBirthControl = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/'; // controle date 
 $year = preg_replace('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', '$1', '1986-12-07');
 
-$errors = [];
-if(!preg_match($lettersControl, $lastName))
+$errors = []; //declaration d'un tableau errors
+
+//CONDITIONS DE REGEX SUR LES VALEURS RENSEIGNEES
+if(!preg_match($lettersControl, $lastName)) //condition si : regex est faux 
 {
-    $errors['lastName'] = 'Le nom est incorrect';
+    $errors['lastName'] = 'Le nom est incorrect'; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-if(!preg_match($lettersControl, $firstName)){$errors['firstName'] = 'Le prénom est incorrect';}
-if($gender!=='female' && $gender!=='male'){$errors['gender'] = 'Veuillez renseigner une catégorie';}
-if(!preg_match($dateOfBirthControl,$dateOfBirth)){$errors['dateOfBirth'] = 'La date est incorrect';}
-if(!preg_match($zipCodeControl, $zipCode)){$errors['zipCode'] = 'Le code postal est incorrect';}
-if(!preg_match($adressControl,$adress)){$errors['adress'] = 'L\'adress est incorrect';}
-if(!preg_match($cityControl,$city)){$errors['city'] = 'La ville est incorrect';}
-if(!filter_var($emailControl,FILTER_VALIDATE_EMAIL)){$errors['email'] = 'L\'email est incorrect';}
+if(!preg_match($lettersControl, $firstName)){$errors['firstName'] = 'Le prénom est incorrect';}  //condition si : regex est faux, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if($gender!=='female' && $gender!=='male'){$errors['gender'] = 'Veuillez renseigner une catégorie';} //condition si : valeur renseignée égale à 'femal' ou 'male', execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if(!preg_match($dateOfBirthControl,$dateOfBirth)){$errors['dateOfBirth'] = 'La date est incorrect';} //condition si : regex est faux, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if(!preg_match($zipCodeControl, $zipCode)){$errors['zipCode'] = 'Le code postal est incorrect';} //condition si : regex est faux, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if(!preg_match($adressControl,$adress)){$errors['adress'] = 'L\'adress est incorrect';} //condition si : regex est faux, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if(!preg_match($cityControl,$city)){$errors['city'] = 'La ville est incorrect';} //condition si : regex est faux, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if(!filter_var($emailControl,FILTER_VALIDATE_EMAIL)){$errors['email'] = 'L\'email est incorrect';} //condition si : filtre faux, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 //if(!preg_match($questionControl,$question)){$errors['question'] = 'La question n\'est pas renseignée';}
-if(empty($question)){$errors['question'] = 'La question n\'est pas renseignée';}
-if($age>$deanOfHumanityAge){$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';}
-if($age<$majorityAge){
-    if($dateOfBirth>$today) // Si l'année de naissance est antérieur à la date du jour et l'année de naissance est inférieur à l'année de naissance du doyen de l'humanité
-    {$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';} 
-    else {$errors['dateOfBirth'] = 'Vous n\'êtes pas majeur !';}}
+if(empty($question)){$errors['question'] = 'La question n\'est pas renseignée';} //condition si : vide, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if($age>$deanOfHumanityAge){$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';} //condition si : la variable age est supérieur à celle du doyen de l'humanité, execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+if($age<$majorityAge) //condition si la variable âge est inférieur à l'âge de la majorité 
+    {if($dateOfBirth>$today) // execute : Si la date de naissance est posterieur à la date du jour 
+    {$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';} // execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+    else {$errors['dateOfBirth'] = 'Vous n\'êtes pas majeur !';}} // Sinon : le tableau errors prend la valeur entre cotes pour l'index entre crochet
+
+    $host="localhost"; 
+    $username="root";
+    $password="";
+    $base="jarditou";
+    $dsn = 'mysql:host='.$host.':3308;charset=utf8;dbname='.$base;
+
+try 
+{
+$db = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+//$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
+catch (PDOException $e)
+{
+    echo 'Erreur : ' . $e->getMessage() . '<br>';
+    echo 'N° : ' . $e->getCode() . '<br>';
+    die('Connexion au serveur impossible.');
+}
+$requete = $db->prepare("INSERT INTO form (`form_last_name`, `form_first_name`,`form_gender`, `form_date_of_birth`, `form_zip_code`, `form_adress`, `form_city`, `form_email`,`form_subject`, `form_question`,`form_agrement`) VALUES 
+(:form_last_name, :form_first_name, :form_gender, :form_date_of_birth, :form_zip_code, :form_adress, :form_city, :form_email, :form_subject, :form_question, :form_agrement)");
+if($requete->execute(array(
+    ':form_last_name' => $lastName ,
+    ':form_first_name' => $firstName ,
+    ':form_gender' => $gender ,
+    ':form_date_of_birth' => $dateOfBirth ,
+    ':form_zip_code' => $zipCode ,
+    ':form_adress' => $adress ,
+    ':form_city' => $city ,
+    ':form_email' => $email ,
+    ':form_subject' => $subject ,
+    ':form_question' => $question ,
+    ':form_agrement' => $agrement
+))) 
+{
+    $success=true;
+}
+else
+{
+    echo 'le formulaire n\'est pas valide'; 
+}; 
+ var_dump($gender);
 ?>
 
-    <?php include_once "topOfPage.php" ?>
-
-    <div class="container">
+<?php include_once "topOfPage.php" ?>
+    <?php
+    if(isset($success)) 
+    { 
+    ?>
+    <p class="alert alert-success">Le formulaire a été ajouté!</p>
+    <?php 
+    } 
+    ?>
+<div class="container">
         <p class="rouge">* Ces zones sont obligatoires</p>
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -212,4 +259,4 @@ if($age<$majorityAge){
             </div>
         </div>
     </div>
-    <?php include_once "endOfPage.php" ?>
+    <?php include_once "endOfPage.php" ?> 

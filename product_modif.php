@@ -15,6 +15,42 @@ $productDetails = $req->fetch(PDO::FETCH_ASSOC);
 $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 $table = (array_combine($libelleTable,$productDetails));
 
+
+$requete = $db->prepare("INSERT INTO `produits` (`pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`, `pro_d_modif`, `pro_bloque`) VALUES
+(:pro_cat_id, :pro_ref, :pro_libelle, :pro_description, :pro_prix, :pro_stock, :pro_couleur, :pro_photo, NOW(), :pro_d_modif, :pro_bloque)");
+// $requete->bindValue(':pro_id', $pro_id);
+// $requete->bindValue(':pro_cat_id', $pro_cat_id) ;
+// $requete->bindValue(':pro_ref', $pro_ref);
+// $requete->bindValue(':pro_libelle', $pro_libelle);
+// $requete->bindValue(':pro_description', $pro_description);
+// $requete->bindValue(':pro_prix', $pro_prix);
+// $requete->bindValue(':pro_stock', $pro_stock);
+// $requete->bindValue(':pro_couleur', $pro_couleur);
+// $requete->bindValue(':pro_photo', $pro_photo);
+// $requete->bindValue(':pro_d_ajout', $pro_d_ajout) ;
+// $requete->bindValue(':pro_d_modif', $pro_d_modif) ;
+// $requete->bindValue(':pro_bloque', $pro_bloque);
+if($requete->execute(array(
+    ':pro_cat_id'=> $pro_cat_id,
+    ':pro_ref' => $pro_ref,
+    ':pro_libelle' => $pro_libelle,
+    ':pro_description' => $pro_description,
+    ':pro_prix' => $pro_prix, 
+    ':pro_stock' => $pro_stock,
+    ':pro_couleur' => $pro_couleur,
+    ':pro_photo' => $pro_photo,
+    ':pro_d_modif' => $pro_d_modif,
+    ':pro_bloque' => $pro_bloque
+))) 
+{
+    $succes=true;
+}
+else
+{
+    echo 'le formulaire n\'est pas valide'; 
+}; 
+
+
 ?>
 <?php include_once "topOfPage.php" ?>
 <div class="container-fluid">
