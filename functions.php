@@ -32,4 +32,11 @@
     {
         header("Location:product_liste.php");
         return;
+    };
+
+    function delete()
+    {
+        $sql = ""
+        $sqlDel = "DELETE FROM 'produits' WHERE pro_id=:pro_id"
+
     }

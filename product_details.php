@@ -16,6 +16,7 @@ $productDetails = $req->fetch(PDO::FETCH_ASSOC);
 $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 $table = (array_combine($libelleTable,$productDetails));
 
+
 ?>
 <?php include_once "topOfPage.php" ?>
 <div class="container-fluid">
@@ -69,7 +70,27 @@ $table = (array_combine($libelleTable,$productDetails));
     ?>
 <button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
 <button class="btn btn-secondary"><a href="product_modif.php?pro_id=<?= $table['ID']?>">Modifier</a></button>
-
+<button class="btn btn-danger" type="button" data-toggle="modal" data-target="#product_delete"><a href="product_modif.php?pro_id=<?= $table['ID']?>">Supprimer</a></button>
+<div class="modal fade" id="product_delete" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modal_delete_product" aria-hidden="true" >
+<div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" >
+        
+            <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="form-group">
+                <label for="" class="col-form-label">Voulez-vous vraiment supprimer le produit ?</label>
+                <input name="" id="" type="text" class="form-control" value="">
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" name="" class="btn btn-secondary" role="button"><a href="product_details.php?del_pro=<?=?>">Oui</a></button>
+            <button type="button" name="" class="btn btn-secondary" data-dismiss="modal">Non</button>
+            </div>
+        </div>
+</div>
+</div>
 </form>
 </div>
 <?php include_once "endOfPage.php" ?>

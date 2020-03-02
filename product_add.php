@@ -16,6 +16,7 @@ $pro_couleur = $_POST['pro_couleur'] ?? '';
 $pro_photo = $_POST['pro_photo'] ?? '';
 $pro_bloque = $_POST['pro_bloque'] ?? '';
 $pro_d_ajout = $_POST['pro_d_ajout'] ?? '';
+$pro_photo = $_FILES['pro_photo'] ?? '';
 $isSubmit = isset($_POST['submit']) ? true : false;
 
 //regex
@@ -26,7 +27,7 @@ $pro_description_control = '/^\w{0,1000}$/';
 $pro_prix_control = '/^\d{1,6}([.|,](\d{1,2}))?$/'; //Regex prix de six chiffres avant la virgule et deux chiffres après
 $pro_stock_control = '/^\d{0,11}$/'; // regex 0 ou 11 chiffres
 $pro_couleur_control = '/^[a-zA-Z]{0,30}$/' ; //regex uniquement des lettres au moins une jusqu'a 30 caractères 
-$pro_photo_control = '/^[a-zA-Z]{1,4}$/';
+// $pro_photo_control = '/^[a-zA-Z]{1,4}$/';
 
 $errors=[]; //declaration d'un tableau
 
@@ -58,6 +59,7 @@ if(!preg_match($pro_stock_control, $pro_stock)) //condition si : regex est faux
 {
     $errors['pro_stock']='La valeur du stock doit être inférieur à 11 chiffres '; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
+if(sizeof($_FILES['pro_photo']['error'])>0){$errors['pro_photo']='Le téléchargement a échoué'}
 if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
 {
     $success=true;
@@ -79,7 +81,7 @@ else
     ?>
 
 <div class="container-fluid">
-    <form action="product_add" method="POST">
+    <form action="product_add" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="pro_ref">Référence</label>
             <input type="text" name="pro_ref" id="pro_ref" value="<?=$pro_ref?>" 
@@ -125,7 +127,7 @@ else
         </div>
         <div class="form-group">
             <label for="pro_photo">Photo</label>
-            <input type="text" name="pro_photo" id="pro_photo" value="<?=$pro_photo?>" class="form-control">
+            <input type="file" name="pro_photo" id="pro_photo" value="<?=$pro_photo?>" class="form-control  <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
         </div>
         <div class="form-check">
