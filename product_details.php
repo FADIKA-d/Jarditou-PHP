@@ -7,18 +7,19 @@ if(!isset($_GET['pro_id'])){
     exit();
 }
 $pro_id = $_GET['pro_id'];
- $sql = "SELECT `pro_id`, `pro_ref`, `pro_cat_id`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_bloque`, `pro_d_ajout`, `pro_d_modif` FROM `produits` WHERE `pro_id`= :pro_id AND ISNULL(pro_bloque)";
+ $sql = "SELECT `pro_id`, `pro_ref`, `pro_cat_id`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_bloque`, `pro_d_ajout`, `pro_d_modif` FROM `produits` WHERE `pro_id`= :pro_id";
 $req = $db->prepare($sql);
 $req->bindValue(":pro_id", $pro_id);
 $req->execute();
 $productDetails = $req->fetch(PDO::FETCH_ASSOC);
+
 $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 $table = (array_combine($libelleTable,$productDetails));
 
 ?>
 <?php include_once "topOfPage.php" ?>
 <div class="container-fluid">
-<form action="products_details" method="$_POST">
+<form action="product_details.php" method="POST">
     <?php
 
     foreach ($table as $key => $details)
@@ -67,7 +68,8 @@ $table = (array_combine($libelleTable,$productDetails));
     }
     ?>
 <button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
-<button class="btn btn-secondary"><a href="product_modif.php">Modifier</a></button>
+<button class="btn btn-secondary"><a href="product_modif.php?pro_id=<?= $table['ID']?>">Modifier</a></button>
+
 </form>
 </div>
 <?php include_once "endOfPage.php" ?>

@@ -111,7 +111,7 @@ else
 {
     echo 'le formulaire n\'est pas valide'; 
 }; 
- var_dump($gender);
+
 ?>
 
 <?php include_once "topOfPage.php" ?>
@@ -127,7 +127,7 @@ else
         <p class="rouge">* Ces zones sont obligatoires</p>
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="#" method="POST" id="formContact">
+                <form action="#" method="POST" id="formContact" class="">
                     <fieldset class="border border-dark p-2">
                         <legend>Vos coordonnées</legend>
                         <div class="form-group justify-content-center row">

@@ -26,3 +26,10 @@
         $requete->bindValue(':pro_photo', $pro_photo);
         return $requete->execute();
     };
+
+
+    function redirection() 
+    {
+        header("Location:product_liste.php");
+        return;
+    }

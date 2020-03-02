@@ -17,8 +17,8 @@ $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', '
 $table = (array_combine($libelleTable,$productDetails));
 // var_dump($pro_id);
 // var_dump($libelleTable);
-var_dump($productDetails);
-var_dump($table);
+//var_dump($productDetails);
+// var_dump($table);
 
 
 
@@ -122,76 +122,57 @@ else
 }; 
 ?>
 <?php include_once "topOfPage.php" ?>
-<?php
-    if(isset($success)) 
-    { 
-    ?>
-<p class="alert alert-success">Le produit a été ajouté!</p>
-<?php 
-    } 
-    ?>
-
 <div class="container-fluid">
-    <form action="product_add" method="POST">
-        <div class="form-group">
-            <label for="pro_ref">Référence</label>
-            <input type="text" name="pro_ref" id="pro_ref" value="<?=$productDetails['pro_ref']?>" 
-            class="form-control  <?= ($isSubmit && isset($errors['pro_ref'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_ref']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_ref'])) ? 'invalid-feedback' : ''?>"> <?=isset($errors['pro_ref']) ? $errors['pro_ref'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_cat_id">Catégorie</label>
-            <select name="pro_cat_id" id="pro_cat_id" class="form-control <?= ($isSubmit && isset($errors['pro_cat_id'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_cat_id']))) ? 'is-valid' : '';?> ">
-                <option value="" selected><?= $productDetails['pro_cat_id']?></option>
-                <?php foreach($categories as $category) { ?>
-                    <option value= "<?= $category->cat_id ?>" <?=($pro_cat_id == $category->cat_id) ? 'selected' : '' ?>> <?= $category->cat_nom ?>
-                </option>
-                <?php } ?>              
-            </select>
-            <div class=" <?=(isset($errors['pro_cat_id'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_cat_id'])) ? $errors['pro_cat_id'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_libelle">Libellé</label>
-            <input type="text" name="pro_libelle" id="pro_libelle" value="<?=$productDetails['pro_libelle']?>" class="form-control <?= ($isSubmit && isset($errors['pro_libelle'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_libelle']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_libelle'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_libelle'])) ? $errors['pro_libelle'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_description">Description</label>
-            <input type="text" name="pro_description" id="pro_description" value="<?=$productDetails['pro_description']?>"
-                class="form-control <?= ($isSubmit && isset($errors['pro_description'])) ? 'is-invalid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_description'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_description'])) ? $errors['pro_description'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_prix">Prix</label>
-            <input type="text" name="pro_prix" id="pro_prix" value="<?=$productDetails['pro_prix']?>" class="form-control <?= ($isSubmit && isset($errors['pro_prix'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_prix']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_prix'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_prix'])) ? $errors['pro_prix'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_stock">Stock</label>
-            <input type="text" name="pro_stock" id="pro_stock" value="<?=$productDetails['pro_stock']?>" class="form-control <?= ($isSubmit && isset($errors['pro_stock'])) ? 'is-invalid' : '';?> <?= ($isSubmit && ($pro_stock!='0')) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_stock'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_stock'])) ? $errors['pro_stock'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_couleur">Couleur</label>
-            <input type="text" name="pro_couleur" id="pro_couleur" value="<?=$productDetails['pro_couleur']?>" class="form-control <?= ($isSubmit && isset($errors['pro_couleur'])) ? 'is-invalid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_couleur'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_couleur'])) ? $errors['pro_couleur'] : '' ?></div>
-        </div>
-        <div class="form-group">
-            <label for="pro_photo">Photo</label>
-            <input type="text" name="pro_photo" id="pro_photo" value="<?=$productDetails['pro_photo']?>" class="form-control">
-            <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
-        </div>
-        <div class="form-check">
-            <label for="pro_bloque" class="form-check-label">Produit bloqué : </label>
-            <input type="checkbox" name="pro_bloque" class=" custom-control-input" id="pro_bloque"
-                value="<?=$productDetails['pro_bloque']?>" <?=($pro_bloque ==1) ? 'checked': '' ?> data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary"
-                data-offstyle="default">
-        </div>
-        <div class="form-group">
-            <input type="hidden" name="pro_d_ajout" id="pro_d_ajout" value="<?=date("Y-m-d")?>" class="form-control">
-        </div>
-        <button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
-        <button type="submit" name="submit" class="btn btn-secondary">Enregistrer</button>
-    </form>
+<form action="products_details" method="$_POST">
+    <?php
+
+    foreach ($table as $key => $details)
+    {
+        $libelle = array_search($details, $table);
+        ?>
+    <div>
+    <?php
+        if ($key=='Bloqué')
+        { 
+        ?>
+        <label for="<?php $key?>">Produit bloqué : </label>
+        <input type="radio" name="bloque" value="Yes">
+        <label for="<?php $key?>">Oui</label>
+        <input type="radio" name="bloque" value="No" checked>
+        <label for="<?php $key?>">Non</label>
+        <?php
+        }
+        if ($key=='Date d\'ajout')
+            {
+            ?>
+            <label for="<?php $key?>"><?php echo $libelle?> : </label>
+            <?php
+            echo $details;
+            }
+        if ($key=='Date de modification')
+            {
+                if(empty($details)){$key = next($table);}
+                else {
+            ?>
+            <label for="<?php $key?>"><?php echo $libelle?> :</label>
+            <?php
+            echo $details;
+            }}
+        else
+            {
+              
+            ?>
+            <div class="form-group"><label for="<?php $key?>"><?php echo $libelle?></label>
+            <input type="text" name="<?php $key?>" id="<?php $key?>" value=" <?php echo $details?>" class="form-control"></div>
+            <?php
+             }
+    ?>
+    </div>
+    <?php
+    }
+    ?>
+<button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
+<button class="btn btn-secondary"><a href="product_add.php">Enregistrer</a></button>
+</form>
 </div>
 <?php include_once "endOfPage.php" ?>
