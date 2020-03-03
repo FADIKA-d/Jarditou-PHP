@@ -1,19 +1,32 @@
 <?php 
- require "connexion_bdd.php"; // Inclusion de notre bibliothèque de fonctions
+// require "connexion_bdd.php"; // Inclusion de notre bibliothèque de fonctions
  
- $db = connexionBase(); // Appel de la fonction de connexion
- //Debut de la requete produit
-//  $requete = "SELECT * FROM produits WHERE pro_id";
-// $resultProduct = $db->query($requete);
-// $produit = $resultProduct->fetch(PDO::FETCH_OBJ); // Renvoi de l'enregistrement sous forme d'un objet
-// $tableau = [];
-// $produit = "SELECT produits "
-$sql = "SELECT `pro_id`, `pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`, `pro_d_modif`, `pro_bloque` FROM `produits`";
-$req = $db->query($sql);
-$products = $req->fetchAll(PDO::FETCH_OBJ);
-$modify_ask = isset($_POST['modif']) ?  true : false ;
-$for_modif = $_POST['for_modif'] ?? '';
-var_dump($for_modif);
+// $db = connexionBase(); // Appel de la fonction de connexion
+//  //Debut de la requete produit
+// //  $requete = "SELECT * FROM produits WHERE pro_id";
+// // $resultProduct = $db->query($requete);
+// // $produit = $resultProduct->fetch(PDO::FETCH_OBJ); // Renvoi de l'enregistrement sous forme d'un objet
+// // $tableau = [];
+// // $produit = "SELECT produits "
+// $sql = "SELECT `pro_id`, `pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`, `pro_d_modif`, `pro_bloque` FROM `produits`";
+// $req = $db->query($sql);
+// $products = $req->fetchAll(PDO::FETCH_OBJ);
+
+
+
+
+include 'functions.php'; 
+$products = products();
+$productDetails = productdetails();
+// var_dump($products);
+// var_dump($productDetails);
+
+$pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
+// var_dump($for_modif);
+// var_dump($pro_id);
+// var_dump($pro_id);
+
+
 ?>
 
         <?php include_once "topOfPage.php" ?>
@@ -75,14 +88,12 @@ var_dump($for_modif);
             <form action="product_liste.php" method="POST">
             <div class="form-group">
                 <label for="for_modif" class="col-form-label">Quel produit voulez-vous modifier ? (indiquez l'ID) </label>
-                <input name="for_modif" id="for_modif" type="text" class="form-control" value="<?=$for_modif?>">
+                <input name="for_modif" id="for_modif" type="text" class="form-control" value="">
             </div>
             </form>
             </div>
-            <div class="modal-footer">
-            <button type="submit" name="submit" class="btn btn-secondary" role="button"><a href="product_modif.php?pro_id=<?=$for_modif?>">Valider</a></button>
+            <button type="submit" name="submit" class="btn btn-secondary" role="button"><a href="product_modif.php?pro_id=<?=$pro_id?>">Valider</a></button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            </div>
         </div>
         </div>
         <!-- <a href="product_modif.php?pro_id=<?=$for_modif?>" data-content="<?=$for_modif?>">Valider</a> -->

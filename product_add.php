@@ -29,7 +29,7 @@ $pro_stock_control = '/^\d{0,11}$/'; // regex 0 ou 11 chiffres
 $pro_couleur_control = '/^[a-zA-Z]{0,30}$/' ; //regex uniquement des lettres au moins une jusqu'a 30 caractères 
 // $pro_photo_control = '/^[a-zA-Z]{1,4}$/';
 
-$errors=[]; //declaration d'un tableau
+$errors=[]; //declaration d'un tableau d'erreurs
 
 if(!preg_match($pro_ref_control, $pro_ref)) //condition si : regex est faux 
 {
@@ -59,7 +59,22 @@ if(!preg_match($pro_stock_control, $pro_stock)) //condition si : regex est faux
 {
     $errors['pro_stock']='La valeur du stock doit être inférieur à 11 chiffres '; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-if(sizeof($_FILES['pro_photo']['error'])>0){$errors['pro_photo']='Le téléchargement a échoué'}
+if(($_FILES['pro_photo']['error'])>0)
+{
+   
+    switch($_FILES['pro_photo']['error'])
+    {
+        case 1: $errors['pro_photo']= 'Aucun fichier téléchargé : La taille du fichier téléchargé excède la valeur maximale configurée dans php.ini'; break;
+        case 2: $errors['pro_photo']= 'Aucun fichier téléchargé : Le fichier n\'a été que partiellement téléchargé.'; break;
+        case 3: $errors['pro_photo']= 'Aucun fichier téléchargé : Aucun fichier n\'a été téléchargé.'; break;
+        case 4: $errors['pro_photo']= 'Aucun fichier téléchargé : Un dossier temporaire est manquant.' ; break;
+        case 5: $errors['pro_photo']= 'Aucun fichier téléchargé : Échec de l\'écriture du fichier sur le disque.'; break;
+        case 6: $errors['pro_photo']= 'Aucun fichier téléchargé : Une extension PHP a arrêté l\'envoi de fichier.'; break;     
+    }
+}
+// else { 'Aucune erreur, le téléchargement est correct.'} ;
+
+
 if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
 {
     $success=true;
@@ -69,6 +84,31 @@ else
 {
     echo 'le formulaire n\'est pas valide'; 
 }; 
+
+var_dump($_FILES['pro_photo']);
+var_dump($_FILES);
+var_dump($_FILES['pro_photo']['error']);
+
+
+$extension = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);
+
+if ($_FILES['pro_photo']) {move_uploaded_file(($_FILES['pro_photo']['tmp_name']), "asset/img/images/.$pro_id.$extension");}
+
+
+var_dump($_FILES['pro_photo']['name']);
+var_dump($_FILES['pro_photo']['size']);
+var_dump($_FILES['pro_photo']['type']);
+var_dump($_FILES['pro_photo']['tmp_name']);
+var_dump($_FILES['pro_photo']['error']);
+
+// foreach ($_FILES as$key => $value)
+// {
+//     $extension = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);
+
+// }
+
+
+
 ?>
 <?php include_once "topOfPage.php" ?>
 <?php
@@ -78,6 +118,7 @@ else
 <p class="alert alert-success">Le produit a été ajouté!</p>
 <?php 
     } 
+    
     ?>
 
 <div class="container-fluid">
@@ -127,7 +168,7 @@ else
         </div>
         <div class="form-group">
             <label for="pro_photo">Photo</label>
-            <input type="file" name="pro_photo" id="pro_photo" value="<?=$pro_photo?>" class="form-control  <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> ">
+            <input type="file" name="pro_photo" id="pro_photo" value="" class="form-control  <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
         </div>
         <div class="form-check">

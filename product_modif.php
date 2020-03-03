@@ -1,25 +1,22 @@
 <?php 
 require 'functions.php';
 
-
- $db = connexionBase(); // Appel de la fonction de connexion
 // if(!isset($_GET['pro_id'])){
 //     header('Location:product_liste.php');
 //     exit();
 // }
-$pro_id = $_GET['pro_id'];
-$sql = "SELECT `pro_id`, `pro_ref`, `pro_cat_id`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_bloque`, `pro_d_ajout`, `pro_d_modif` FROM `produits` WHERE `pro_id`= :pro_id ";
-$req = $db->prepare($sql);
-$req->bindParam(':pro_id', $pro_id);
-$req->execute();
-$productDetails = $req->fetch(PDO::FETCH_ASSOC);
-$libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
-$table = (array_combine($libelleTable,$productDetails));
-// var_dump($pro_id);
-// var_dump($libelleTable);
-var_dump($productDetails);
-var_dump($table);
 
+// if (isset($_GET['pro_id'])) {$pro_id=$_GET['pro_id']; } else if (isset($_POST['for_modif'])) {$pro_id=$_POST['for_modif'];} else {$pro_id= 7; };
+$pro_id = $_GET['pro_id'] ?? $_POST['for_modif'];
+$productModif= productModif(); //fonction pour avoir les détails d'un produit
+$categories = getCategories();
+
+
+$libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
+($productModif) ? $table = (array_combine($libelleTable,$productModif)) : ''; // nouveau tableau 
+// var_dump($pro_id);
+// var_dump($productModif);
+// var_dump($table);
 
 
 // $requete = $db->prepare("INSERT INTO `produits` (`pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`, `pro_d_modif`, `pro_bloque`) VALUES
@@ -55,6 +52,7 @@ var_dump($table);
 // {
 //     echo 'le formulaire n\'est pas valide'; 
 // }; 
+
 
 
 $categories = getCategories();//  require "connexion_bdd.php"; // page de connexion
@@ -135,14 +133,14 @@ else
     <form action="product_add" method="POST">
         <div class="form-group">
             <label for="pro_ref">Référence</label>
-            <input type="text" name="pro_ref" id="pro_ref" value="<?=$productDetails['pro_ref']?>" 
+            <input type="text" name="pro_ref" id="pro_ref" value="<?=$productModif['pro_ref']?>" 
             class="form-control  <?= ($isSubmit && isset($errors['pro_ref'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_ref']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_ref'])) ? 'invalid-feedback' : ''?>"> <?=isset($errors['pro_ref']) ? $errors['pro_ref'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_cat_id">Catégorie</label>
             <select name="pro_cat_id" id="pro_cat_id" class="form-control <?= ($isSubmit && isset($errors['pro_cat_id'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_cat_id']))) ? 'is-valid' : '';?> ">
-                <option value="" selected><?= $productDetails['pro_cat_id']?></option>
+                <option value="" selected><?= $productModif['pro_cat_id']?></option>
                 <?php foreach($categories as $category) { ?>
                     <option value= "<?= $category->cat_id ?>" <?=($pro_cat_id == $category->cat_id) ? 'selected' : '' ?>> <?= $category->cat_nom ?>
                 </option>
@@ -152,45 +150,45 @@ else
         </div>
         <div class="form-group">
             <label for="pro_libelle">Libellé</label>
-            <input type="text" name="pro_libelle" id="pro_libelle" value="<?=$productDetails['pro_libelle']?>" class="form-control <?= ($isSubmit && isset($errors['pro_libelle'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_libelle']))) ? 'is-valid' : '';?> ">
+            <input type="text" name="pro_libelle" id="pro_libelle" value="<?=$productModif['pro_libelle']?>" class="form-control <?= ($isSubmit && isset($errors['pro_libelle'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_libelle']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_libelle'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_libelle'])) ? $errors['pro_libelle'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_description">Description</label>
-            <input type="text" name="pro_description" id="pro_description" value="<?=$productDetails['pro_description']?>"
+            <input type="text" name="pro_description" id="pro_description" value="<?=$productModif['pro_description']?>"
                 class="form-control <?= ($isSubmit && isset($errors['pro_description'])) ? 'is-invalid' : '';?> ">
             <div class=" <?=(isset($errors['pro_description'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_description'])) ? $errors['pro_description'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_prix">Prix</label>
-            <input type="text" name="pro_prix" id="pro_prix" value="<?=$productDetails['pro_prix']?>" class="form-control <?= ($isSubmit && isset($errors['pro_prix'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_prix']))) ? 'is-valid' : '';?> ">
+            <input type="text" name="pro_prix" id="pro_prix" value="<?=$productModif['pro_prix']?>" class="form-control <?= ($isSubmit && isset($errors['pro_prix'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_prix']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_prix'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_prix'])) ? $errors['pro_prix'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_stock">Stock</label>
-            <input type="text" name="pro_stock" id="pro_stock" value="<?=$productDetails['pro_stock']?>" class="form-control <?= ($isSubmit && isset($errors['pro_stock'])) ? 'is-invalid' : '';?> <?= ($isSubmit && ($pro_stock!='0')) ? 'is-valid' : '';?> ">
+            <input type="text" name="pro_stock" id="pro_stock" value="<?=$productModif['pro_stock']?>" class="form-control <?= ($isSubmit && isset($errors['pro_stock'])) ? 'is-invalid' : '';?> <?= ($isSubmit && ($pro_stock!='0')) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_stock'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_stock'])) ? $errors['pro_stock'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_couleur">Couleur</label>
-            <input type="text" name="pro_couleur" id="pro_couleur" value="<?=$productDetails['pro_couleur']?>" class="form-control <?= ($isSubmit && isset($errors['pro_couleur'])) ? 'is-invalid' : '';?> ">
+            <input type="text" name="pro_couleur" id="pro_couleur" value="<?=$productModif['pro_couleur']?>" class="form-control <?= ($isSubmit && isset($errors['pro_couleur'])) ? 'is-invalid' : '';?> ">
             <div class=" <?=(isset($errors['pro_couleur'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_couleur'])) ? $errors['pro_couleur'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_photo">Photo</label>
-            <input type="text" name="pro_photo" id="pro_photo" value="<?=$productDetails['pro_photo']?>" class="form-control">
+            <input type="text" name="pro_photo" id="pro_photo" value="<?=$productModif['pro_photo']?>" class="form-control">
             <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
         </div>
         <div class="form-check">
             <label for="pro_bloque" class="form-check-label">Produit bloqué : </label>
             <input type="checkbox" name="pro_bloque" class=" custom-control-input" id="pro_bloque"
-                value="<?=$productDetails['pro_bloque']?>" <?=($pro_bloque ==1) ? 'checked': '' ?> data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary"
+                value="<?=$productModif['pro_bloque']?>" <?=($pro_bloque ==1) ? 'checked': '' ?> data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary"
                 data-offstyle="default">
         </div>
         <div class="form-group">
             <input type="hidden" name="pro_d_ajout" id="pro_d_ajout" value="<?=date("Y-m-d")?>" class="form-control">
         </div>
-        <button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
+        <button class="btn btn-secondary"><a href="product_liste.php">Annuler</a></button>
         <button type="submit" name="submit" class="btn btn-secondary">Enregistrer</button>
     </form>
 </div>
