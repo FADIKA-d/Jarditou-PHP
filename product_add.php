@@ -18,12 +18,11 @@ $pro_bloque = $_POST['pro_bloque'] ?? '';
 $pro_d_ajout = $_POST['pro_d_ajout'] ?? '';
 $pro_photo = $_FILES['pro_photo'] ?? '';
 $isSubmit = isset($_POST['submit']) ? true : false;
-
 //regex
 
 $pro_ref_control = '/^\w{1,10}$/';//regex au moins un caractère au plus 10 caracrtères attachés
-$pro_libelle_control = '/^\w{1,200}$/'; // regex jusqu'à 200 caractères
-$pro_description_control = '/^\w{0,1000}$/'; 
+$pro_libelle_control = '/\w{1,200}/'; // regex jusqu'à 200 caractères
+$pro_description_control = '/\w{0,1000}/'; 
 $pro_prix_control = '/^\d{1,6}([.|,](\d{1,2}))?$/'; //Regex prix de six chiffres avant la virgule et deux chiffres après
 $pro_stock_control = '/^\d{0,11}$/'; // regex 0 ou 11 chiffres
 $pro_couleur_control = '/^[a-zA-Z]{0,30}$/' ; //regex uniquement des lettres au moins une jusqu'a 30 caractères 
@@ -59,7 +58,7 @@ if(!preg_match($pro_stock_control, $pro_stock)) //condition si : regex est faux
 {
     $errors['pro_stock']='La valeur du stock doit être inférieur à 11 chiffres '; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-if(($_FILES['pro_photo']['error'])>0)
+if((isset($_FILES['pro_photo'])) && (($_FILES['pro_photo']['error'])>0))
 {
    
     switch($_FILES['pro_photo']['error'])
@@ -78,36 +77,55 @@ if(($_FILES['pro_photo']['error'])>0)
 if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
 {
     $success=true;
-    $redirection = redirection();
+    // $redirection = redirection();
 }
 else
 {
     echo 'le formulaire n\'est pas valide'; 
 }; 
 
-var_dump($_FILES['pro_photo']);
-var_dump($_FILES);
-var_dump($_FILES['pro_photo']['error']);
+if (isset($_FILES['pro_photo'])) 
+            {
+                // var_dump($_FILES['pro_photo']);
+                $path_parts= pathinfo($_FILES['pro_photo']['name']);
+                // echo $path_parts['dirname'],"<br>";
+                // echo $path_parts['basename'], "<br>";
+                // echo $path_parts['extension'], "<br>";
+                // echo $path_parts['filename'], "<br>";
 
+                $tmp = $_FILES['pro_photo']['tmp_name'];
+                // $photoName = $path_parts['filename'];
+                // $extension = $path_parts['extension'];
+                $name = $_FILES['pro_photo']['name'];
+                $src = "asset/img/images/" ;
+                $photoPath = $src.$name ?? '';
+                move_uploaded_file($tmp, $photoPath);
+            }
+    
+// if (isset($_FILES['pro_photo'])) 
+// {
+//     var_dump($_FILES['pro_photo']);
+//         $path_parts= pathinfo($_FILES['pro_photo']['name']);
+//     echo $path_parts['dirname'],"<br>";
+//     echo $path_parts['basename'], "<br>";
+//     echo $path_parts['extension'], "<br>";
+//     echo $path_parts['filename'], "<br>";
 
-$extension = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);
-
-if ($_FILES['pro_photo']) {move_uploaded_file(($_FILES['pro_photo']['tmp_name']), "asset/img/images/.$pro_id.$extension");}
-
-
-var_dump($_FILES['pro_photo']['name']);
-var_dump($_FILES['pro_photo']['size']);
-var_dump($_FILES['pro_photo']['type']);
-var_dump($_FILES['pro_photo']['tmp_name']);
-var_dump($_FILES['pro_photo']['error']);
+//     $tmp = $_FILES['pro_photo']['tmp_name'];
+//     $photoName = $path_parts['filename'];
+//     $extension = $path_parts['extension'];
+//     $name = $_FILES['pro_photo']['name'];
+//     $src = "asset/img/images/" ;
+//     $photoPath = $src.$name;
+//     var_dump($photoPath);
+//     move_uploaded_file($tmp, $photoPath);
+// }
 
 // foreach ($_FILES as$key => $value)
 // {
-//     $extension = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);
+//     $extension2 = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);
 
 // }
-
-
 
 ?>
 <?php include_once "topOfPage.php" ?>
@@ -166,14 +184,17 @@ var_dump($_FILES['pro_photo']['error']);
             <input type="text" name="pro_couleur" id="pro_couleur" value="<?=$pro_couleur?>" class="form-control <?= ($isSubmit && isset($errors['pro_couleur'])) ? 'is-invalid' : '';?> ">
             <div class=" <?=(isset($errors['pro_couleur'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_couleur'])) ? $errors['pro_couleur'] : '' ?></div>
         </div>
-        <div class="form-group">
-            <label for="pro_photo">Photo</label>
-            <input type="file" name="pro_photo" id="pro_photo" value="" class="form-control  <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
+        <div class="custom-file">
+            <label for="pro_photo" class="custom-file-label">Photo</label>
+            <input type="file" name="pro_photo" id="pro_photo" class="custom-file-input <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> " accept="image/png, image/jpeg">
+            <div class=""> <?=($isSubmit && isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
         </div>
+        <div class="<?=($isSubmit && (!isset($errors['pro_photo']))) ? 'valid-feedback' : ''?>"> 
+        <?php if(isset($photoPath)) { ?> <img class="w-auto h-auto" src="<?= $photoPath?>"></img> <?php ;} ?>
+         </div>           
         <div class="form-check">
             <label for="pro_bloque" class="form-check-label">Produit bloqué : </label>
-            <input type="checkbox" name="pro_bloque" class=" custom-control-input" id="pro_bloque"
+            <input type="checkbox" name="pro_bloque" class=" form-check-input" id="pro_bloque"
                 value="1" <?=($pro_bloque ==1) ? 'checked': '' ?> data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary"
                 data-offstyle="default">
         </div>

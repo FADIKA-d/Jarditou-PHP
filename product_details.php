@@ -6,6 +6,7 @@ if(!isset($_GET['pro_id'])){
     exit();
 }
 require 'functions.php';
+$photo= photo();
 $pro_id = $_GET['pro_id'];
 
 $productDetails = productdetails();
