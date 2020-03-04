@@ -9,18 +9,16 @@
         $req = $db->query($sql);
         return $req->fetchAll(PDO::FETCH_OBJ);
     }
-    function productdetails()
+    function productdetails($pro_id)
     {
     $db = connexionBase(); // Appel de la fonction de connexion
-
-    $pro_id = $_GET['pro_id'] ?? '';
     $sql = "SELECT `pro_id`, `pro_ref`, `pro_cat_id`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_bloque`, `pro_d_ajout`, `pro_d_modif` FROM `produits` WHERE `pro_id`= :pro_id ";
     $req = $db->prepare($sql);
     $req->bindParam(':pro_id', $pro_id);
     $req->execute();
     return $req->fetch(PDO::FETCH_ASSOC);
     }
-    function productModif()
+    function productModif($pro_id, $pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo, $pro_bloque)
     {
         $db = connexionBase(); // Appel de la fonction de connexion
         if (isset($_GET['pro_id'])) {$pro_id=$_GET['pro_id']; } else if (isset($_POST['for_modif'])) {$pro_id=$_POST['for_modif'];};
@@ -76,40 +74,37 @@
         $requete->execute();
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
-    function uploads()
+
+function uploads($photo, $name)
+{
+    $path_parts= pathinfo($photo['name']);
+    $allowedExtensions=['jpg', 'jpeg','png'];
+    $extension = $path_parts['extension'];
+    $maxFileSize = 2;
+    if (($photo['name']['size'] < $maxFileSize) && in_array($extension, $allowedExtensions))
     {
+        // echo $path_parts['dirname'],"<br>";
+        // echo $path_parts['basename'], "<br>";
+        // echo $path_parts['extension'], "<br>";
+        // echo $path_parts['filename'], "<br>";
 
+        $tmp = $photo['tmp_name'];
+        // $photoName = $path_parts['filename'];
+        $src = 'asset/img/images/'. $name;
+        if(move_uploaded_file($tmp, $src)){
+            return $extension;
+        }
+        return false;
     }
-  function photo ()
+}
+  function updateProduct($pro_id, $pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo, $pro_bloque)
   {
-    if (isset($_FILES['pro_photo'])) 
-            {
-                // var_dump($_FILES['pro_photo']);
-                $path_parts= pathinfo($_FILES['pro_photo']['name']);
-                // echo $path_parts['dirname'],"<br>";
-                // echo $path_parts['basename'], "<br>";
-                // echo $path_parts['extension'], "<br>";
-                // echo $path_parts['filename'], "<br>";
-
-                $tmp = $_FILES['pro_photo']['tmp_name'];
-                // $photoName = $path_parts['filename'];
-                // $extension = $path_parts['extension'];
-                $name = $_FILES['pro_photo']['name'];
-                $src = "asset/img/images/" ;
-                $photoPath = $src.$name;
-                var_dump($photoPath);
-                move_uploaded_file($tmp, $photoPath);
-            }
-    return; 
-  }
-  function update()
-  {
-      $db = connexionBase();
-      $sql = ("UPDATE `produits` 
-      SET `pro_cat_id`=:pro_cat_id,`pro_ref`=:pro_ref,`pro_libelle`=:pro_libelle,`pro_description`=:pro_description,`pro_prix`=:pro_prix,`pro_stock`=:pro_stock,`pro_couleur`=:pro_couleur,`pro_photo`=:pro_photo,`pro_bloque`=:pro_bloque 
-      WHERE `pro_id`= :pro_id");
+    $db = connexionBase();
+    $sql = ("UPDATE `produits` 
+    SET `pro_cat_id`=:pro_cat_id,`pro_ref`=:pro_ref,`pro_libelle`=:pro_libelle,`pro_description`=:pro_description,`pro_prix`=:pro_prix,`pro_stock`=:pro_stock,`pro_couleur`=:pro_couleur,`pro_photo`=:pro_photo,`pro_bloque`=:pro_bloque 
+    WHERE `pro_id`= :pro_id");
     $requete = $db->prepare($sql);
-    $requete->bindParam(':pro_cat_id', $pro_cat_id) ;
+    $requete->bindParam(':pro_cat_id', $pro_cat_id);
     $requete->bindParam(':pro_ref', $pro_ref);
     $requete->bindParam(':pro_libelle', $pro_libelle);
     $requete->bindParam(':pro_description', $pro_description);
@@ -117,7 +112,7 @@
     $requete->bindParam(':pro_stock', $pro_stock);
     $requete->bindParam(':pro_couleur', $pro_couleur);
     $requete->bindParam(':pro_photo', $pro_photo);
-    $requete->bindParam(':pro_bloque', $pro_bloque);
-    
-    return $requete->fetchAll(PDO::FETCH_OBJ);
+    $requete->bindParam(':pro_bloque', $pro_bloque);    
+    $requete->bindParam(':pro_id', $pro_id);
+    return $requete->execute(); 
   }

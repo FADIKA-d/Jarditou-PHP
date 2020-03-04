@@ -1,19 +1,27 @@
 <?php 
 require 'functions.php';
 
-// if(!isset($_GET['pro_id'])){
-//     header('Location:product_liste.php');
-//     exit();
-// }
+if(!isset($_GET['pro_id'])){
+    header('Location:product_liste.php');
+    exit();
+}
 
+$pro_id=$_GET['pro_id']; 
 // if (isset($_GET['pro_id'])) {$pro_id=$_GET['pro_id']; } else if (isset($_POST['for_modif'])) {$pro_id=$_POST['for_modif'];} else {$pro_id= 7; };
-if (isset($_GET['pro_id'])) {$pro_id=$_GET['pro_id']; } else if (isset($_POST['for_modif'])) {$pro_id=$_POST['for_modif'];};
-$productModif= productModif(); //fonction pour avoir les détails d'un produit
-$categories = getCategories();
-$update = update();
+// if (isset($_GET['pro_id']))
+// {
+//     $pro_id=$_GET['pro_id']; 
+// } 
+// else if (isset($_POST['for_modif'])) 
+// {
+//     $pro_id=$_POST['for_modif'];
+// };
+// $productModif= productModif(); //fonction pour avoir les détails d'un produit
+// $update = update();
+$productModif = productdetails($pro_id);
 
-$libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
-($productModif) ? $table = (array_combine($libelleTable,$productModif)) : ''; // nouveau tableau 
+// $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
+// $table = ($productModif) ? (array_combine($libelleTable,$productModif)) : ''; // nouveau tableau 
 // var_dump($pro_id);
 // var_dump($productModif);
 // var_dump($table);
@@ -54,9 +62,9 @@ $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', '
 // }; 
 
 
-
-$categories = getCategories();//  require "connexion_bdd.php"; // page de connexion
-
+// Je récupère mes catégories pour alimenter les options de mon select
+$categories = getCategories();
+// Initialisation de mes variables avec les posts ou vide
 $pro_ref = $_POST['pro_ref'] ?? '';
 $pro_cat_id = $_POST['pro_cat_id'] ?? '';
 $pro_libelle = $_POST['pro_libelle'] ?? '';
@@ -67,7 +75,7 @@ $pro_couleur = $_POST['pro_couleur'] ?? '';
 $pro_photo = $_POST['pro_photo'] ?? '';
 $pro_bloque = $_POST['pro_bloque'] ?? '';
 $pro_d_ajout = $_POST['pro_d_ajout'] ?? '';
-$pro_photo = $_FILES['pro_photo'] ?? '';
+$pro_photo = '';
 $isSubmit = isset($_POST['submit']) ? true : false;
 
 //regex
@@ -80,8 +88,10 @@ $pro_stock_control = '/^\d{0,11}$/'; // regex 0 ou 11 chiffres
 $pro_couleur_control = '/^[a-zA-Z]{0,30}$/' ; //regex uniquement des lettres au moins une jusqu'a 30 caractères 
 $pro_photo_control = '/^[a-zA-Z]{1,4}$/';
 
-$errors=[]; //declaration d'un tableau
+//declaration et initialisation du tableau d'erreurs
+$errors = [];  
 
+// Test de validation des données stockées dans les variables
 if(!preg_match($pro_ref_control, $pro_ref)) //condition si : regex est faux 
 {
     $errors['pro_ref']='La référence saisie n\'est pas valide'; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
@@ -110,22 +120,30 @@ if(!preg_match($pro_stock_control, $pro_stock)) //condition si : regex est faux
 {
     $errors['pro_stock']='La valeur du stock doit être inférieur à 11 chiffres '; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
-{
-    $success=true;
-    $redirection = redirection();
+
+if (isset($_FILES['pro_photo'])) {
+    if($_FILES['pro_photo']['error'] != 0){
+        $errors['pro_photo'] = 'Erreur lors de l\'upload !';
+    }else{
+        $photo = $_FILES['pro_photo'];
+    }
 }
-else
+
+// Test soumission du formulaire et absence d'erreurs suite à la validation 
+if($isSubmit && count($errors)==0) 
 {
-    echo 'le formulaire n\'est pas valide'; 
-}; 
+    // appel de la fonction de maj des données d'un enrégistrement dans la table produits
+    if(updateProduct($pro_id, $pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo, $pro_bloque))
+    {
+        $redirection = redirection();
+    }    
+    $fail=true;
+}
+include_once "topOfPage.php";
+if(isset($fail)) 
+{ 
 ?>
-<?php include_once "topOfPage.php" ?>
-<?php
-    if(isset($success)) 
-    { 
-    ?>
-<p class="alert alert-success">Le produit a été ajouté!</p>
+<p class="alert alert-danger">Le produit n'a pas été modifié !</p>
 <?php 
     } 
 
@@ -133,10 +151,10 @@ else
     ?>
 
 <div class="container-fluid">
-    <form action="product_modif" method="POST">
+    <form action="product_modif.php?pro_id=<?= $pro_id ?>" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="pro_ref">Référence</label>
-            <input type="text" name="pro_ref" id="pro_ref" value="<?=$productModif['pro_ref']?>" 
+            <input type="text" name="pro_ref" id="pro_ref" value="<?= $productModif['pro_ref'] ?>" 
             class="form-control  <?= ($isSubmit && isset($errors['pro_ref'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_ref']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_ref'])) ? 'invalid-feedback' : ''?>"> <?=isset($errors['pro_ref']) ? $errors['pro_ref'] : '' ?></div>
         </div>
@@ -182,17 +200,16 @@ else
         </div>
         <div class="custom-file">
             <label for="pro_photo" class="custom-file-label" >Photo</label>
-            <input type="text" name="pro_photo" id="pro_photo"  class="custom-file-input">
+            <input type="file" name="pro_photo" id="pro_photo"  class="custom-file-input">
             <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
             <div class="<?=($isSubmit && (!isset($errors['pro_photo']))) ? 'valid-feedback' : ''?>"><?php if(isset($photoPath)) { ?> <img class="w-auto h-auto" src="<?= $photoPath?>"></img> <?php ;} ?>
          </div>
         </div>
 
-        <!-- <div >
-            <label for="pro_photo" >Photo</label>
-            <input type="file" name="pro_photo" id="pro_photo"  <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> " accept="image/png, image/jpeg">
+        
+            <!-- <input type="file" name="pro_photo" id="pro_photo"  <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> " accept="image/png, image/jpeg">
             <div class=""> <?=($isSubmit && isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
-        </div> -->
+     -->
         
 
 

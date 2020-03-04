@@ -43,6 +43,7 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
                         <th>Ajout</th>
                         <th>Modif</th>
                         <th>Bloqué</th>
+                        <th colspan="2"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,13 +55,16 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
                         <td><img src="<?=$src?>" alt="photo" class="form-control w-25 h-auto"></img></td>
                         <td><?php echo $product->pro_id; ?></td>
                         <td><?php echo $product->pro_ref; ?></td>
-                        <td><a href="product_details.php?pro_id=<?= $product->pro_id?>"><?php echo  $product->pro_libelle; ?></a></td>
+                        <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><?php echo  $product->pro_libelle; ?></a></td>
                         <td><?php echo $product->pro_prix; ?></td>
                         <td><?php echo $product->pro_stock; ?></td>
                         <td><?php echo $product->pro_couleur; ?></td>
                         <td><?php echo $product->pro_d_ajout; ?></td>
                         <td><?php echo $product->pro_d_modif; ?></td>
                         <td><?php echo $product->pro_bloque; ?></td>
+                        <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-info-circle fa-2x"></i></a></td>
+                        <td><a href="product_modif.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-edit fa-2x"></i></a></td>
+
                     </tr>
                     <?php
                 }

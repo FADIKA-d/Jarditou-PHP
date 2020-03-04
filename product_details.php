@@ -9,7 +9,7 @@ require 'functions.php';
 $photo= photo();
 $pro_id = $_GET['pro_id'];
 
-$productDetails = productdetails();
+$productDetails = productdetails($pro_id);
 $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 $table = (array_combine($libelleTable,$productDetails));
 
