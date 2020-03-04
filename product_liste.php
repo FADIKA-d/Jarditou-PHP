@@ -14,6 +14,7 @@
 
 include 'functions.php'; 
 $products = products();
+
 $productDetails = productdetails();
 // var_dump($products);
 // var_dump($productDetails);
@@ -22,7 +23,6 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
 // var_dump($for_modif);
 // var_dump($pro_id);
 // var_dump($pro_id);
-
 
 ?>
 
@@ -48,9 +48,10 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
                 <tbody>
                     <?php
                 foreach ($products as $product){
+                $src = "asset/img/images/$product->pro_id.jpg" ;
                 ?>
                     <tr>
-                        <td><?php echo $product->pro_photo; ?></td>
+                        <td><img src="<?=$src?>" alt="photo" class="form-control w-25 h-auto"></img></td>
                         <td><?php echo $product->pro_id; ?></td>
                         <td><?php echo $product->pro_ref; ?></td>
                         <td><a href="product_details.php?pro_id=<?= $product->pro_id?>"><?php echo  $product->pro_libelle; ?></a></td>
