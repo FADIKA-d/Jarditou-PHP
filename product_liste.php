@@ -12,9 +12,6 @@
 // $req = $db->query($sql);
 // $products = $req->fetchAll(PDO::FETCH_OBJ);
 
-
-
-
 include 'functions.php'; 
 $products = products();
 $productDetails = productdetails();
@@ -29,9 +26,8 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
 
 ?>
 
-        <?php include_once "topOfPage.php" ?>
-    <div class="container">
-    
+    <?php include_once "topOfPage.php" ?>
+    <div class="container">   
         
         <div class="table-responsive mx-auto pt-5">
             <table class="table table-bordered table-striped table-hover border ">

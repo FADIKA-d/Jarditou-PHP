@@ -1,4 +1,5 @@
 <?php
+require_once 'connexion_bdd.php';
 $today = date("Y-m-d"); // variable contenant la date du jour
 
 //VARIABLES DE RECUPERATION DES REPONSES DU QUESTIONNAIRE
@@ -72,24 +73,8 @@ if($age<$majorityAge) //condition si la variable âge est inférieur à l'âge d
     {$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';} // execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
     else {$errors['dateOfBirth'] = 'Vous n\'êtes pas majeur !';}} // Sinon : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 
-    $host="localhost"; 
-    $username="root";
-    $password="";
-    $base="jarditou";
-    $dsn = 'mysql:host='.$host.':3308;charset=utf8;dbname='.$base;
-
-try 
-{
-$db = new PDO($dsn, $username, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-//$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-}
-catch (PDOException $e)
-{
-    echo 'Erreur : ' . $e->getMessage() . '<br>';
-    echo 'N° : ' . $e->getCode() . '<br>';
-    die('Connexion au serveur impossible.');
-}
-$requete = $db->prepare("INSERT INTO form (`form_last_name`, `form_first_name`,`form_gender`, `form_date_of_birth`, `form_zip_code`, `form_adress`, `form_city`, `form_email`,`form_subject`, `form_question`,`form_agrement`) VALUES 
+        $db = connectionBase();
+        $requete = $db->prepare("INSERT INTO form (`form_last_name`, `form_first_name`,`form_gender`, `form_date_of_birth`, `form_zip_code`, `form_adress`, `form_city`, `form_email`,`form_subject`, `form_question`,`form_agrement`) VALUES 
 (:form_last_name, :form_first_name, :form_gender, :form_date_of_birth, :form_zip_code, :form_adress, :form_city, :form_email, :form_subject, :form_question, :form_agrement)");
 if($requete->execute(array(
     ':form_last_name' => $lastName ,

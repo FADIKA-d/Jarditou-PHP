@@ -59,7 +59,7 @@ if(!preg_match($pro_stock_control, $pro_stock)) //condition si : regex est faux
 {
     $errors['pro_stock']='La valeur du stock doit être inférieur à 11 chiffres '; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-if(($_FILES['pro_photo']['error'])>0)
+if(isset($_FILES['pro_photo']) && ($_FILES['pro_photo']['error']) > 0)
 {
    
     switch($_FILES['pro_photo']['error'])
@@ -84,10 +84,6 @@ else
 {
     echo 'le formulaire n\'est pas valide'; 
 }; 
-
-var_dump($_FILES['pro_photo']);
-var_dump($_FILES);
-var_dump($_FILES['pro_photo']['error']);
 
 
 $extension = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);

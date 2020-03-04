@@ -4,13 +4,13 @@ function connexionBase()
 {
     $host="localhost"; 
     $login= "root";  // loggin d'accès au serveur de BDD 
-   $password="";    // pour s'identifier auprès du serveur
-   $base = "jarditou";
+    $password="";    // pour s'identifier auprès du serveur
+    $base = "jarditou";
 
    try 
    {
-       $db= new PDO('mysql:host='.$host.':3308;charset=utf8;dbname='.$base, $login, $password);
-	
+    //    $db= new PDO('mysql:host='.$host.':3308;charset=utf8;dbname='.$base, $login, $password);
+       $db= new PDO('mysql:host='.$host.';charset=utf8;dbname='.$base, $login, $password);
        return $db;
     } 
     catch (Exception $e) 
