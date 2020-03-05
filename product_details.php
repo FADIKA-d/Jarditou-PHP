@@ -12,8 +12,15 @@ $productDetails = productdetails($pro_id);
 $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 $table = (array_combine($libelleTable,$productDetails));
 
-if (isset($_GET['delete'])) {$delete = deleteProduct();};
-$del = $_GET['delete'] ?? '';
+if (isset($_GET['delete'])) 
+{
+    if(deleteProduct($pro_id))
+    {
+        redirection();
+    }
+    
+}
+
 
 
 ?>
@@ -94,7 +101,7 @@ $del = $_GET['delete'] ?? '';
                 <div class="form-group">
                     <label for="" class="col-form-label">Voulez-vous vraiment supprimer le produit <?=$pro_id?> ?</label>
                     </div>
-                    <button type="button" name="delete" class="btn btn-secondary" role="button"><a href="product_details.php?pro_id=<?=$pro_id?>">Oui</a></button>
+                    <button type="button" name="delete" class="btn btn-secondary" role="button"><a href="product_details.php?pro_id=<?= $pro_id ?>&amp;delete=true">Oui</a></button>
                     <button type="button" name="" class="btn btn-secondary" data-dismiss="modal">Non</button>
                 
             </div>

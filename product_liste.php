@@ -14,8 +14,8 @@
 
 include 'functions.php'; 
 $products = products();
-$pro_id = $_GET['pro_id']  ?? '';
-$productDetails = productdetails($pro_id);
+// $pro_id = $_GET['pro_id']  ?? '';
+// $productDetails = productdetails($pro_id);
 $for_modif = $_POST['for_modif']  ?? '';
 
 ?>
@@ -43,12 +43,12 @@ $for_modif = $_POST['for_modif']  ?? '';
                 <tbody>
                     <?php
                 foreach ($products as $product){
-                $src = "asset/img/images/".$product->pro_id ;
+                $src = "asset/img/images/".$product->pro_id . '.' . $product->pro_photo;
                 // var_dump($src);
                 // var_dump($product->pro_id);
                 ?>
                     <tr>
-                        <td><img src="<?=$src?>" alt="photo" class="form-control w-25 h-auto"></img></td>
+                        <td><img src="<?= $src ?>" alt="photo" class="form-control w-25 h-auto"></img></td>
                         <td><?php echo $product->pro_id; ?></td>
                         <td><?php echo $product->pro_ref; ?></td>
                         <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><?php echo  $product->pro_libelle; ?></a></td>
@@ -82,11 +82,11 @@ $for_modif = $_POST['for_modif']  ?? '';
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
-            <form action="product_liste.php" method="POST">
+            <form action="product_modif.php" method="POST">
             <div class="form-group">
-                <label for="for_modif" class="col-form-label">Quel produit voulez-vous modifier ? (indiquez l'ID) </label>
-                <input name="for_modif" id="for_modif" type="text" class="form-control" value="">
-                <button type="submit" name="submit" class="btn btn-secondary" role="button"><a href="product_modif.php?pro_id=<?=$_POST['for_modif']?>">Valider</a></button>
+                <label for="pro_id" class="col-form-label">Quel produit voulez-vous modifier ? (indiquez l'ID) </label>
+                <input name="pro_id" id="pro_id" type="text" class="form-control" value="">
+                <button type="submit" name="submit" class="btn btn-secondary" role="button">Valider</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
             </div>
             </form>

@@ -2,12 +2,12 @@
 require 'functions.php'; // appel de la pages des fonctions
 
 // redirection vers la page liste si il n'y a pas de GET
-if(!isset($_GET['pro_id'])){
+if(!isset($_GET['pro_id']) && !isset($_POST['pro_id'])){
     header('Location:product_liste.php');
     exit();
 }
 
-$pro_id=$_GET['pro_id'];  // initialisation de la variable GET 
+$pro_id = $_GET['pro_id'] ?? $_POST['pro_id'];   // initialisation de la variable GET 
 
 $productModif = productdetails($pro_id); // initialisation de la fonction productdetails avec comme argument $pro_id
 
@@ -65,7 +65,7 @@ $pro_prix = $_POST['pro_prix'] ?? '';
 $pro_stock = $_POST['pro_stock'] ?? '0' ;
 $pro_couleur = $_POST['pro_couleur'] ?? '';
 $pro_photo = $_POST['pro_photo'] ?? '';
-$pro_bloque = $_POST['pro_bloque'] ?? '';
+$pro_bloque = $_POST['pro_bloque'] ?? 0;
 $pro_d_ajout = $_POST['pro_d_ajout'] ?? '';
 $isSubmit = isset($_POST['submit']) ? true : false;
 
@@ -126,13 +126,16 @@ if (isset($_FILES['pro_photo']))
     $tmp = $_FILES['pro_photo']['tmp_name'];
     $path_parts= pathinfo($_FILES['pro_photo']['name']);
     $extension = $path_parts['extension'];
+    // var_dump($path_parts);
     $name = $_FILES['pro_photo']['name'];
+    // $name = $path_parts['filename'];
     $src = "asset/img/images/" ;
     $photoPath = $src.$name ?? '';
     // var_dump($photoPath);
-    move_uploaded_file($tmp, $photoPath);
-    // var_dump($extension);
-    $pro_photo = $extension ;
+    if(move_uploaded_file($tmp, $photoPath)){
+        // var_dump($extension);
+        $pro_photo = $extension ;
+    }
     // var_dump($pro_photo);
 }
 
@@ -143,9 +146,11 @@ if($isSubmit && count($errors)==0)
     // appel de la fonction de maj des données d'un enrégistrement dans la table produits
     if(updateProduct($pro_id, $pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo, $pro_bloque))
     {
-        $redirection = redirection();
+        header("Location:product_liste.php");
+        exit();
     }    
     $fail=true;
+    var_dump($pro_bloque);
 }
 
 // debut du HTML
@@ -216,6 +221,7 @@ if(isset($fail)) // condition si echec de l'enregistrement
         
         <div class="custom-file">
             <label for="pro_photo" class="custom-file-label" >Photo</label>
+            <input type="hidden" name="pro_photo" value="<?=$productModif['pro_photo']?>">
             <input type="file" name="pro_photo" id="pro_photo"  class="custom-file-input <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> ">
             <div class=" <?=(isset($errors['pro_photo'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
             <div class="<?=($isSubmit && (!isset($errors['pro_photo']))) ? 'valid-feedback' : ''?>"><?php if(isset($$extension)) { ?> <img class="w-auto h-auto" src="<?= $extension ?>"></img> <?php ;} ?></div>
@@ -228,7 +234,7 @@ if(isset($fail)) // condition si echec de l'enregistrement
 
             <div class="<?= ($isSubmit && (isset($_FILES['pro_photo']))) ? 'is-valid' : '';?>"> 
                 <img class="w-auto h-auto" src="<?=($isSubmit && (isset($_FILES['pro_photo']))) ?  $photoPath : '' ; ?>"></img>
-                <span><?= ($isSubmit && (isset($_FILES['pro_photo']))) ? $extension : '' ; ?></span>
+                <!-- <span><?= ($isSubmit && (isset($_FILES['pro_photo']))) ? $extension : '' ; ?></span> -->
             </div> 
 
 
@@ -238,7 +244,7 @@ if(isset($fail)) // condition si echec de l'enregistrement
         <div class="form-check">
             <label for="pro_bloque" class="form-check-label">Produit bloqué : </label>
             <input type="checkbox" name="pro_bloque" class=" custom-control-input" id="pro_bloque"
-                value="<?=$productModif['pro_bloque']?>" <?=($pro_bloque ==1) ? 'checked': '' ?> data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary"
+                value="1" <?=($pro_bloque ==1) ? 'checked': '' ?> data-toggle="toggle" data-on="Oui" data-off="Non" data-onstyle="secondary"
                 data-offstyle="default">
         </div>
         <div class="form-group">

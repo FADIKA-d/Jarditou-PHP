@@ -105,38 +105,36 @@ if((isset($_FILES['pro_photo'])) && (($_FILES['pro_photo']['error'])>0))
 
 //             }
 
-    
-    
-if (isset($_FILES['pro_photo'])) 
-{
-    $path_parts= pathinfo($_FILES['pro_photo']['name']);
-    $tmp = $_FILES['pro_photo']['tmp_name'];
-    $name = $_FILES['pro_photo']['name'];
-    $src = "asset/img/images/" ;
-    $photoPath = $src.$name ?? '';
-    move_uploaded_file($tmp, $src.$name);
-   
-    // if (file_exists($photo)) {
-    //     header('Content-Description: File Transfer');
-    //     header('Content-Type: application/octet-stream');
-    //     header('Content-Disposition: attachment; filename="'.basename($file).'"');
-    //     header('Expires: 0');
-    //     header('Cache-Control: must-revalidate');
-    //     header('Pragma: public');
-    //     header('Content-Length: '.filesize($photo));
-    //     readfile($photo);
-    //     exit;
-    // }
-}
-
-
-
 // Test soumission du formulaire et absence d'erreurs suite à la validation 
 
 if($isSubmit && count($errors)==0) 
 {
-    if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
+    $result = addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo);
+    if($result)
     {
+        if (isset($_FILES['pro_photo'])) 
+        {
+            $path_parts= pathinfo($_FILES['pro_photo']['name']);
+            $tmp = $_FILES['pro_photo']['tmp_name'];
+            $extension = $path_parts['extension'];
+            $name = $result .'.' . $extension;
+            $src = "asset/img/images/" ;
+            $photoPath = $src.$name ?? '';
+            move_uploaded_file($tmp, $src.$name);
+    
+        // if (file_exists($photo)) {
+        //     header('Content-Description: File Transfer');
+        //     header('Content-Type: application/octet-stream');
+        //     header('Content-Disposition: attachment; filename="'.basename($file).'"');
+        //     header('Expires: 0');
+        //     header('Cache-Control: must-revalidate');
+        //     header('Pragma: public');
+        //     header('Content-Length: '.filesize($photo));
+        //     readfile($photo);
+        //     exit;
+        // }
+    }
+    // rename($photoPath, $src.$result. '.' . $extension);
     $success=true;
     $redirection = redirection();
     }
