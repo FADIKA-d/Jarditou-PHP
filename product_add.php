@@ -1,11 +1,11 @@
 <?php 
 
-require_once 'functions.php';
+require_once 'functions.php'; // Appel de la pages des fonctions
+
+$categories = getCategories(); // Appel de la fonction getCategories dans une variable
 
 
-
-$categories = getCategories();
-
+// recupération des catégories pour alimenter les options de mon select
 $pro_ref = $_POST['pro_ref'] ?? '';
 $pro_cat_id = $_POST['pro_cat_id'] ?? '';
 $pro_libelle = $_POST['pro_libelle'] ?? '';
@@ -18,8 +18,8 @@ $pro_bloque = $_POST['pro_bloque'] ?? '';
 $pro_d_ajout = $_POST['pro_d_ajout'] ?? '';
 $pro_photo = $_FILES['pro_photo'] ?? '';
 $isSubmit = isset($_POST['submit']) ? true : false;
-//regex
 
+//regex
 $pro_ref_control = '/^\w{1,10}$/';//regex au moins un caractère au plus 10 caracrtères attachés
 $pro_libelle_control = '/\w{1,200}/'; // regex jusqu'à 200 caractères
 $pro_description_control = '/\w{0,1000}/'; 
@@ -28,7 +28,8 @@ $pro_stock_control = '/^\d{0,11}$/'; // regex 0 ou 11 chiffres
 $pro_couleur_control = '/^[a-zA-Z]{0,30}$/' ; //regex uniquement des lettres au moins une jusqu'a 30 caractères 
 // $pro_photo_control = '/^[a-zA-Z]{1,4}$/';
 
-$errors=[]; //declaration d'un tableau d'erreurs
+//declaration et initialisation du tableau d'erreurs
+$errors=[]; 
 
 if(!preg_match($pro_ref_control, $pro_ref)) //condition si : regex est faux 
 {
@@ -75,69 +76,87 @@ if((isset($_FILES['pro_photo'])) && (($_FILES['pro_photo']['error'])>0))
 // else { 'Aucune erreur, le téléchargement est correct.'} ;
 
 
-if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
-{
-    $success=true;
-    // $redirection = redirection();
-}
-else
-{
-    echo 'le formulaire n\'est pas valide'; 
-}; 
 
-if (isset($_FILES['pro_photo'])) 
-            {
-                // var_dump($_FILES['pro_photo']);
-                $path_parts= pathinfo($_FILES['pro_photo']['name']);
-                // echo $path_parts['dirname'],"<br>";
-                // echo $path_parts['basename'], "<br>";
-                // echo $path_parts['extension'], "<br>";
-                // echo $path_parts['filename'], "<br>";
 
-                $tmp = $_FILES['pro_photo']['tmp_name'];
-                // $photoName = $path_parts['filename'];
-                // $extension = $path_parts['extension'];
-                $name = $_FILES['pro_photo']['name'];
-                $src = "asset/img/images/" ;
-                $photoPath = $src.$name ?? '';
-                move_uploaded_file($tmp, $photoPath);
-            }
-    
+//intégration du fichier image
+
 // if (isset($_FILES['pro_photo'])) 
-// {
-//     var_dump($_FILES['pro_photo']);
-//         $path_parts= pathinfo($_FILES['pro_photo']['name']);
-//     echo $path_parts['dirname'],"<br>";
-//     echo $path_parts['basename'], "<br>";
-//     echo $path_parts['extension'], "<br>";
-//     echo $path_parts['filename'], "<br>";
+//             {
+//                 // var_dump($_FILES['pro_photo']);
+//                 $path_parts= pathinfo($_FILES['pro_photo']['name']);
+//                 echo $path_parts['dirname'],"<br>";
+//                 echo $path_parts['basename'], "<br>";
+//                 echo $path_parts['extension'], "<br>";
+//                 echo $path_parts['filename'], "<br>";
 
-//     $tmp = $_FILES['pro_photo']['tmp_name'];
-//     $photoName = $path_parts['filename'];
-//     $extension = $path_parts['extension'];
-//     $name = $_FILES['pro_photo']['name'];
-//     $src = "asset/img/images/" ;
-//     $photoPath = $src.$name;
-//     var_dump($photoPath);
-//     move_uploaded_file($tmp, $photoPath);
-// }
+//                 $tmp = $_FILES['pro_photo']['tmp_name'];
+//                 $photoName = $path_parts['filename'];
+//                 $extension = $path_parts['extension'];
+//                 $name = $_FILES['pro_photo']['name'];
+//                 var_dump($name);
+//                 $src = "asset/img/images/" ;
+//                 $photoPath = $src.'name';
+//                 var_dump($photoPath);
+//                 move_uploaded_file($tmp, $photoPath);
+//                 $allowedExtensions=['jpg', 'jpeg','png'];
+//         //  if (in_array($extension, $allowedExtensions))
+//         //         {
+//         //         array_search($extension)
 
-// foreach ($_FILES as$key => $value)
-// {
-//     $extension2 = substr(strrchr($_FILES['pro_photo']['name'],'.'),1);
+//             }
 
-// }
+    
+    
+if (isset($_FILES['pro_photo'])) 
+{
+    $path_parts= pathinfo($_FILES['pro_photo']['name']);
+    $tmp = $_FILES['pro_photo']['tmp_name'];
+    $name = $_FILES['pro_photo']['name'];
+    $src = "asset/img/images/" ;
+    $photoPath = $src.$name ?? '';
+    move_uploaded_file($tmp, $src.$name);
+   
+    // if (file_exists($photo)) {
+    //     header('Content-Description: File Transfer');
+    //     header('Content-Type: application/octet-stream');
+    //     header('Content-Disposition: attachment; filename="'.basename($file).'"');
+    //     header('Expires: 0');
+    //     header('Cache-Control: must-revalidate');
+    //     header('Pragma: public');
+    //     header('Content-Length: '.filesize($photo));
+    //     readfile($photo);
+    //     exit;
+    // }
+}
 
+
+
+// Test soumission du formulaire et absence d'erreurs suite à la validation 
+
+if($isSubmit && count($errors)==0) 
+{
+    if(addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo))
+    {
+    $success=true;
+    $redirection = redirection();
+    }
+    $fail=true;
+}
+
+
+
+//debut du HTML
 ?>
-<?php include_once "topOfPage.php" ?>
-<?php
-    if(isset($success)) 
-    { 
-    ?>
-<p class="alert alert-success">Le produit a été ajouté!</p>
+<?php include_once "topOfPage.php"; // appel de la page topOfPage
+if(isset($fail)) // condition si echec de l'enregistrement
+{ 
+    //ouverture d'une alerte d'information 
+?>
+<p class="alert alert-danger">Le produit n'a pas été modifié !</p> 
 <?php 
     } 
-    
+
+     // début du formulaire
     ?>
 
 <div class="container-fluid">
@@ -185,14 +204,22 @@ if (isset($_FILES['pro_photo']))
             <input type="text" name="pro_couleur" id="pro_couleur" value="<?=$pro_couleur?>" class="form-control <?= ($isSubmit && isset($errors['pro_couleur'])) ? 'is-invalid' : '';?> ">
             <div class=" <?=(isset($errors['pro_couleur'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_couleur'])) ? $errors['pro_couleur'] : '' ?></div>
         </div>
+
+
+
+
         <div class="custom-file">
             <label for="pro_photo" class="custom-file-label">Photo</label>
             <input type="file" name="pro_photo" id="pro_photo" class="custom-file-input <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> " accept="image/png, image/jpeg">
-            <div class=""> <?=($isSubmit && isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ?></div>
+            <div class="<?=($isSubmit && (!isset($extension))) ? 'invalid-feedback' : '' ?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ;?> </div>
         </div>
-        <div class="<?=($isSubmit && (!isset($errors['pro_photo']))) ? 'valid-feedback' : ''?>"> 
-        <?php if(isset($photoPath)) { ?> <img class="w-auto h-auto" src="<?= $photoPath?>"></img> <?php ;} ?>
-         </div>           
+            <div class="<?= ($isSubmit && (isset($photoPath))) ? 'is-valid' : '';?>">    
+            <img class="w-auto h-auto" src="<?= ($isSubmit && (isset($photoPath))) ? $photoPath : '' ?> " > </img>
+            <span><?=($isSubmit && (isset($extension))) ? $extension : '' ?></span>
+            </div> 
+
+
+
         <div class="form-check">
             <label for="pro_bloque" class="form-check-label">Produit bloqué : </label>
             <input type="checkbox" name="pro_bloque" class=" form-check-input" id="pro_bloque"

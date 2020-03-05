@@ -18,16 +18,16 @@
     $req->execute();
     return $req->fetch(PDO::FETCH_ASSOC);
     }
-    function productModif($pro_id, $pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo, $pro_bloque)
-    {
-        $db = connexionBase(); // Appel de la fonction de connexion
-        if (isset($_GET['pro_id'])) {$pro_id=$_GET['pro_id']; } else if (isset($_POST['for_modif'])) {$pro_id=$_POST['for_modif'];};
-        $sql = "SELECT `pro_id`, `pro_ref`, `pro_cat_id`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_bloque`, `pro_d_ajout`, `pro_d_modif` FROM `produits` WHERE `pro_id`= :pro_id ";
-        $req = $db->prepare($sql);
-        $req->bindParam(':pro_id', $pro_id);
-        $req->execute();
-        return $req->fetch(PDO::FETCH_ASSOC);
-    }
+    // function productModif($pro_id, $pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo, $pro_bloque)
+    // {
+    //     $db = connexionBase(); // Appel de la fonction de connexion
+    //     if (isset($_GET['pro_id'])) {$pro_id=$_GET['pro_id']; } else if (isset($_POST['for_modif'])) {$pro_id=$_POST['for_modif'];};
+    //     $sql = "SELECT `pro_id`, `pro_ref`, `pro_cat_id`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_bloque`, `pro_d_ajout`, `pro_d_modif` FROM `produits` WHERE `pro_id`= :pro_id ";
+    //     $req = $db->prepare($sql);
+    //     $req->bindParam(':pro_id', $pro_id);
+    //     $req->execute();
+    //     return $req->fetch(PDO::FETCH_ASSOC);
+    // }
     function products()
     {
         $db = connexionBase(); 
@@ -56,8 +56,6 @@
         //$requete->bindValue(':pro_photo', $pro_photo);
         return $requete->execute();
     }
-
-
     function redirection() 
     {
         header("Location:product_liste.php");

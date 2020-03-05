@@ -14,15 +14,9 @@
 
 include 'functions.php'; 
 $products = products();
-
-$productDetails = productdetails();
-// var_dump($products);
-// var_dump($productDetails);
-
-$pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
-// var_dump($for_modif);
-// var_dump($pro_id);
-// var_dump($pro_id);
+$pro_id = $_GET['pro_id']  ?? '';
+$productDetails = productdetails($pro_id);
+$for_modif = $_POST['for_modif']  ?? '';
 
 ?>
 
@@ -49,7 +43,9 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
                 <tbody>
                     <?php
                 foreach ($products as $product){
-                $src = "asset/img/images/$product->pro_id.jpg" ;
+                $src = "asset/img/images/".$product->pro_id ;
+                // var_dump($src);
+                // var_dump($product->pro_id);
                 ?>
                     <tr>
                         <td><img src="<?=$src?>" alt="photo" class="form-control w-25 h-auto"></img></td>
@@ -71,7 +67,7 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
                 ?>
                 </tbody>
             </table>
-            <form action="product_liste.php" method="POST">
+            <form action="product_modif.php" method="POST">
                 <button name="modif" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modif_modal">Modifier</button>
                 <button class="btn btn-secondary"><a href="product_add.php">Ajouter</a></button>
             </form>
@@ -90,13 +86,12 @@ $pro_id = $_GET['pro_id'] ?? $_POST['for_modif'] ?? '';
             <div class="form-group">
                 <label for="for_modif" class="col-form-label">Quel produit voulez-vous modifier ? (indiquez l'ID) </label>
                 <input name="for_modif" id="for_modif" type="text" class="form-control" value="">
+                <button type="submit" name="submit" class="btn btn-secondary" role="button"><a href="product_modif.php?pro_id=<?=$_POST['for_modif']?>">Valider</a></button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
             </div>
             </form>
             </div>
-            <button type="submit" name="submit" class="btn btn-secondary" role="button"><a href="product_modif.php?pro_id=<?=$pro_id?>">Valider</a></button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
         </div>
         </div>
-        <!-- <a href="product_modif.php?pro_id=<?=$for_modif?>" data-content="<?=$for_modif?>">Valider</a> -->
         </div>
     <?php include_once "endOfPage.php" ?>

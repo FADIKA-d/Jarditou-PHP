@@ -6,16 +6,15 @@ if(!isset($_GET['pro_id'])){
     exit();
 }
 require 'functions.php';
-$photo= photo();
 $pro_id = $_GET['pro_id'];
 
 $productDetails = productdetails($pro_id);
 $libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 $table = (array_combine($libelleTable,$productDetails));
 
-
 if (isset($_GET['delete'])) {$delete = deleteProduct();};
 $del = $_GET['delete'] ?? '';
+
 
 ?>
 <?php include_once "topOfPage.php" ?>
@@ -25,7 +24,7 @@ $del = $_GET['delete'] ?? '';
 
     foreach ($table as $key => $details)
     {
-        $libelle = array_search($details, $table);
+        array_search($details, $table);
         ?>
     <div>
     <?php
@@ -42,9 +41,22 @@ $del = $_GET['delete'] ?? '';
         else if ($key=='Date d\'ajout')
             {
             ?>
-            <label for="<?php $key?>"><?php echo $libelle?> : </label>
+            <label for="<?php $key?>"><?php echo $key?> : </label>
             <?php
             echo $details;
+            }
+        else if ($key=='Photo')
+            {
+                $src = "asset/img/images/" ;
+                $photoPath = $src.$table['ID'] ;
+                if (isset($photoPath))
+                {
+                
+                ?>
+                <label for="<?php $key?>"><?php echo $key?> :</label>
+                <img class="w-auto h-auto" src="<?= (isset($photoPath)) ? $photoPath : '' ?>"></img>
+                <?php 
+                } 
             }
         else if ($key=='Date de modification')
             {
@@ -59,7 +71,7 @@ $del = $_GET['delete'] ?? '';
             {
               
             ?>
-            <div class="form-group"><label for="<?php $key?>"><?php echo $libelle?></label>
+            <div class="form-group"><label for="<?php $key?>"><?php echo $key?></label>
             <input type="text" name="<?php $key?>" id="<?php $key?>" value=" <?php echo $details?>" class="form-control" readonly></div>
             <?php
              }
