@@ -73,29 +73,29 @@ if($age<$majorityAge) //condition si la variable âge est inférieur à l'âge d
     {$errors['dateOfBirth'] = 'La date de naissance n\'est pas valide';} // execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
     else {$errors['dateOfBirth'] = 'Vous n\'êtes pas majeur !';}} // Sinon : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 
-        $db = connectionBase();
-        $requete = $db->prepare("INSERT INTO form (`form_last_name`, `form_first_name`,`form_gender`, `form_date_of_birth`, `form_zip_code`, `form_adress`, `form_city`, `form_email`,`form_subject`, `form_question`,`form_agrement`) VALUES 
-(:form_last_name, :form_first_name, :form_gender, :form_date_of_birth, :form_zip_code, :form_adress, :form_city, :form_email, :form_subject, :form_question, :form_agrement)");
-if($requete->execute(array(
-    ':form_last_name' => $lastName ,
-    ':form_first_name' => $firstName ,
-    ':form_gender' => $gender ,
-    ':form_date_of_birth' => $dateOfBirth ,
-    ':form_zip_code' => $zipCode ,
-    ':form_adress' => $adress ,
-    ':form_city' => $city ,
-    ':form_email' => $email ,
-    ':form_subject' => $subject ,
-    ':form_question' => $question ,
-    ':form_agrement' => $agrement
-))) 
-{
-    $success=true;
-}
-else
-{
-    echo 'le formulaire n\'est pas valide'; 
-}; 
+//         $db = connectionBase();
+//         $requete = $db->prepare("INSERT INTO form (`form_last_name`, `form_first_name`,`form_gender`, `form_date_of_birth`, `form_zip_code`, `form_adress`, `form_city`, `form_email`,`form_subject`, `form_question`,`form_agrement`) VALUES 
+// (:form_last_name, :form_first_name, :form_gender, :form_date_of_birth, :form_zip_code, :form_adress, :form_city, :form_email, :form_subject, :form_question, :form_agrement)");
+// if($requete->execute(array(
+//     ':form_last_name' => $lastName ,
+//     ':form_first_name' => $firstName ,
+//     ':form_gender' => $gender ,
+//     ':form_date_of_birth' => $dateOfBirth ,
+//     ':form_zip_code' => $zipCode ,
+//     ':form_adress' => $adress ,
+//     ':form_city' => $city ,
+//     ':form_email' => $email ,
+//     ':form_subject' => $subject ,
+//     ':form_question' => $question ,
+//     ':form_agrement' => $agrement
+// ))) 
+// {
+//     $success=true;
+// }
+// else
+// {
+//     echo 'le formulaire n\'est pas valide'; 
+// }; 
 
 ?>
 

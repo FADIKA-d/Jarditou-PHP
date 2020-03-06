@@ -11,18 +11,23 @@
 // $sql = "SELECT `pro_id`, `pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`, `pro_d_modif`, `pro_bloque` FROM `produits`";
 // $req = $db->query($sql);
 // $products = $req->fetchAll(PDO::FETCH_OBJ);
+$libelleTable = ['ID', 'Référence', 'Catégorie', 'Libellé', 'Description', 'Prix', 'Stock', 'Couleur', 'Photo', 'Bloqué', 'Date d\'ajout', 'Date de modification'];
 
 include 'functions.php'; 
 $products = products();
-// $pro_id = $_GET['pro_id']  ?? '';
+$pro_id = $_GET['pro_id']  ?? '';
 // $productDetails = productdetails($pro_id);
 $for_modif = $_POST['for_modif']  ?? '';
+
 
 ?>
 
     <?php include_once "topOfPage.php" ?>
     <div class="container">   
-        
+
+    <!-- <button type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">Popover on top</button> -->
+
+
         <div class="table-responsive mx-auto pt-5">
             <table class="table table-bordered table-striped table-hover border ">
                 <thead>
@@ -38,17 +43,25 @@ $for_modif = $_POST['for_modif']  ?? '';
                         <th>Modif</th>
                         <th>Bloqué</th>
                         <th colspan="2"></th>
+                        <th><i class="fas fa-trash-alt"></i></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                 foreach ($products as $product){
-                $src = "asset/img/images/".$product->pro_id . '.' . $product->pro_photo;
+                // $src = "asset/img/images/".$product->pro_id . '.' . $product->pro_photo;
+                $src = "asset/img/images/".$product->pro_id;
                 // var_dump($src);
                 // var_dump($product->pro_id);
+                $current= current($products);
                 ?>
-                    <tr>
-                        <td><img src="<?= $src ?>" alt="photo" class="form-control w-25 h-auto"></img></td>
+                    <tr> 
+                        <td><a href="product_liste.php?pro_id=<?= $product->pro_id ?>" data-toggle="collapse" aria-expanded="false" aria-controls="product_card"></a>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_card" aria-expanded="false" aria-controls="product_card">
+                            <img src="<?= $src ?>" alt="photo" class="dropright w-25 h-auto" ></img>
+                            </button>
+                        </td>
+                        <!-- <td><a href="#product_card" data-toggle="dropright" aria-expanded="false" aria-controls="product_card" class="form-control" ><img src="<?= $src ?>" alt="photo" class="dropright w-25 h-auto" ></img></a></td> -->
                         <td><?php echo $product->pro_id; ?></td>
                         <td><?php echo $product->pro_ref; ?></td>
                         <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><?php echo  $product->pro_libelle; ?></a></td>
@@ -60,7 +73,7 @@ $for_modif = $_POST['for_modif']  ?? '';
                         <td><?php echo $product->pro_bloque; ?></td>
                         <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-info-circle fa-2x"></i></a></td>
                         <td><a href="product_modif.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-edit fa-2x"></i></a></td>
-
+                        <td><a href="product_modif.php?pro_id=<?= $product->pro_id ?>"><input type="checkbox" name="$product->pro_id"></a></td>
                     </tr>
                     <?php
                 }
@@ -90,8 +103,39 @@ $for_modif = $_POST['for_modif']  ?? '';
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
             </div>
             </form>
+            </div> 
+        </div>
+        </div>
+        </div>
+
+        <!-- Card -->
+        <div class="collapse fixed-top bg-secondary justify-content-center d-bloc w-50" id="product_card" >
+            <div class="card w-50" >
+                <?php
+                 $src = "asset/img/images/".$current->pro_id;
+                 var_dump($current->pro_id);
+                 ?>
+            <div class="row no-gutters  ">
+                <div class="col-md-4">
+                    <img src="<?= $src ?>" alt="Photo" class="card-img">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"> <?php echo $libelleTable[0].' : '.$current->pro_id; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[1].' : '.$current->pro_ref; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[2].' : '.$current->pro_libelle; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[3].' : '.$current->pro_prix; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[4].' : '.$current->pro_stock; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[5].' : '.$current->pro_couleur; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[6].' : '.$current->pro_d_ajout; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[7].' : '.$current->pro_d_modif; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[8].' : '.$current->pro_bloque; ?> </li>
+                    </ul>
+                    </div>
+                    <button type="button" aria-expanded role="button" class="close"  aria-expanded="false"  aria-controls="product_card" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
             </div>
-        </div>
-        </div>
+            </div>
         </div>
     <?php include_once "endOfPage.php" ?>

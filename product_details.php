@@ -70,7 +70,7 @@ if (isset($_GET['delete']))
                 if(empty($details)){$key = next($table);}
                 else {
             ?>
-            <label for="<?php $key?>"><?php echo $libelle?> :</label>
+            <label for="<?php $key?>"><?php echo $key?> :</label>
             <?php
             echo $details;
             }}

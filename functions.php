@@ -39,12 +39,8 @@
     function addProduct($pro_cat_id, $pro_ref, $pro_libelle, $pro_description, $pro_prix, $pro_stock, $pro_couleur, $pro_photo)
     {
         $db = connexionBase();
-        $sql = "INSERT INTO `produits` (`pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, 
-        -- `pro_photo`, 
-        `pro_d_ajout`) VALUES
-        (:pro_cat_id, :pro_ref, :pro_libelle, :pro_description, :pro_prix, :pro_stock, :pro_couleur, 
-        -- :pro_photo, 
-        NOW())";
+        $sql = "INSERT INTO `produits` (`pro_cat_id`, `pro_ref`, `pro_libelle`, `pro_description`, `pro_prix`, `pro_stock`, `pro_couleur`, `pro_photo`, `pro_d_ajout`) VALUES
+        (:pro_cat_id, :pro_ref, :pro_libelle, :pro_description, :pro_prix, :pro_stock, :pro_couleur, :pro_photo, NOW())";
         $requete = $db->prepare($sql);
         $requete->bindValue(':pro_cat_id', $pro_cat_id) ;
         $requete->bindValue(':pro_ref', $pro_ref);
@@ -53,7 +49,7 @@
         $requete->bindValue(':pro_prix', $pro_prix);
         $requete->bindValue(':pro_stock', $pro_stock);
         $requete->bindValue(':pro_couleur', $pro_couleur);
-        //$requete->bindValue(':pro_photo', $pro_photo);
+        $requete->bindValue(':pro_photo', $pro_photo);
         if($requete->execute())
         {
             return $db->lastInsertId();
@@ -101,7 +97,7 @@ function uploads($photo, $name)
   {
     $db = connexionBase();
     $sql = "UPDATE `produits` 
-    SET `pro_cat_id`=:pro_cat_id,`pro_ref`=:pro_ref,`pro_libelle`=:pro_libelle,`pro_description`=:pro_description,`pro_prix`=:pro_prix,`pro_stock`=:pro_stock,`pro_couleur`=:pro_couleur,`pro_photo`=:pro_photo,`pro_bloque`=:pro_bloque 
+    SET `pro_cat_id`=:pro_cat_id,`pro_ref`=:pro_ref,`pro_libelle`=:pro_libelle,`pro_description`=:pro_description,`pro_prix`=:pro_prix,`pro_stock`=:pro_stock,`pro_couleur`=:pro_couleur,`pro_photo`=:pro_photo, `pro_d_modif`= NOW(),`pro_bloque`=:pro_bloque 
     WHERE `pro_id`= :pro_id";
     $requete = $db->prepare($sql);
     $requete->bindParam(':pro_cat_id', $pro_cat_id);
