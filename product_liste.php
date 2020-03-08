@@ -18,7 +18,14 @@ $products = products();
 $pro_id = $_GET['pro_id']  ?? '';
 // $productDetails = productdetails($pro_id);
 $for_modif = $_POST['for_modif']  ?? '';
+$productsID = array_column($products, 'pro_id');
+// var_dump($productsID);
+// $current= current($productsID);
+// var_dump($current);
+// var_dump(next($productsID));
 
+$card_id = $_GET['card_id'] ?? '';
+var_dump($card_id);
 
 ?>
 
@@ -52,14 +59,25 @@ $for_modif = $_POST['for_modif']  ?? '';
                 // $src = "asset/img/images/".$product->pro_id . '.' . $product->pro_photo;
                 $src = "asset/img/images/".$product->pro_id;
                 // var_dump($src);
-                // var_dump($product->pro_id);
-                $current= current($products);
+                //  var_dump($products);
+                // $current= current($products);
+                $productsDelete = $_GET['pro_id'] ?? '';
+                
+                if (isset($productsDelete))
+                {
+                    var_dump($productsDelete);
+                    $countDelete = [];
+                    // $countDelete[$product->$pro_id] = $productsDelete. 
+                    var_dump($countDelete);
+                }
+
+                               
                 ?>
                     <tr> 
-                        <td><a href="product_liste.php?pro_id=<?= $product->pro_id ?>" data-toggle="collapse" aria-expanded="false" aria-controls="product_card"></a>
+                        <td><a href="product_liste.php?card_id=<?=$product->pro_id?>" data-toggle="collapse" aria-expanded="false" aria-controls="product_card"></a>
                         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#product_card" aria-expanded="false" aria-controls="product_card">
                             <img src="<?= $src ?>" alt="photo" class="dropright w-25 h-auto" ></img>
-                            </button>
+                        </button>
                         </td>
                         <!-- <td><a href="#product_card" data-toggle="dropright" aria-expanded="false" aria-controls="product_card" class="form-control" ><img src="<?= $src ?>" alt="photo" class="dropright w-25 h-auto" ></img></a></td> -->
                         <td><?php echo $product->pro_id; ?></td>
@@ -73,13 +91,20 @@ $for_modif = $_POST['for_modif']  ?? '';
                         <td><?php echo $product->pro_bloque; ?></td>
                         <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-info-circle fa-2x"></i></a></td>
                         <td><a href="product_modif.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-edit fa-2x"></i></a></td>
-                        <td><a href="product_modif.php?pro_id=<?= $product->pro_id ?>"><input type="checkbox" name="$product->pro_id"></a></td>
+                        <td><a href="product_liste.php?pro_id=<?= $product->pro_id ?>"><input type="checkbox" name="<?=$product->pro_id?>"></a></td>
                     </tr>
                     <?php
                 }
                 ?>
                 </tbody>
+                <tfoot>
+                <tr>
+                <td colspan="12"></td>
+                <td><button type="submit" name="count_product_delete" class="btn btn-secondary" data-toggle="modal" data-target="#delete_modal">Valider</button></td>
+                </tr>
+                </tfoot>
             </table>
+            
             <form action="product_modif.php" method="POST">
                 <button name="modif" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modif_modal">Modifier</button>
                 <button class="btn btn-secondary"><a href="product_add.php">Ajouter</a></button>
@@ -87,7 +112,7 @@ $for_modif = $_POST['for_modif']  ?? '';
         </div>
     </div>
     <!-- FENETRE MODAL -->
-    <div class="modal fade" id="modif_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modif_modal_liste" aria-hidden="true" >
+    <div class="modal fade" id="modif_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modif_liste_modal" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" >
         
@@ -108,12 +133,37 @@ $for_modif = $_POST['for_modif']  ?? '';
         </div>
         </div>
 
+    <div class="modal fade" id="delete_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="delete_products_modal" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" >
+        
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="form-group">
+                    <label for="" class="col-form-label">Voulez-vous vraiment supprimer le produit <?=$pro_id?> ?</label>
+                </div>
+                <button type="button" name="delete" class="btn btn-secondary" role="button"><a href="product_details.php?pro_id=<?= $pro_id ?>&amp;delete=true">Oui</a></button>
+                <button type="button" name="" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+
         <!-- Card -->
         <div class="collapse fixed-top bg-secondary justify-content-center d-bloc w-50" id="product_card" >
             <div class="card w-50" >
                 <?php
-                 $src = "asset/img/images/".$current->pro_id;
-                 var_dump($current->pro_id);
+                 
+                //  $card_id=$_GET['card_id'] ?? '';
+                 var_dump($card_id);
+                 foreach ($products as $product)
+                 {
+                $src = "asset/img/images/".$card_id. '.' . $product->pro_photo;
+                 if ($product->pro_id==$card_id) 
+                 {
                  ?>
             <div class="row no-gutters  ">
                 <div class="col-md-4">
@@ -122,18 +172,22 @@ $for_modif = $_POST['for_modif']  ?? '';
                 <div class="col-md-8">
                     <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"> <?php echo $libelleTable[0].' : '.$current->pro_id; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[1].' : '.$current->pro_ref; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[2].' : '.$current->pro_libelle; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[3].' : '.$current->pro_prix; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[4].' : '.$current->pro_stock; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[5].' : '.$current->pro_couleur; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[6].' : '.$current->pro_d_ajout; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[7].' : '.$current->pro_d_modif; ?> </li>
-                        <li class="list-group-item"> <?php echo $libelleTable[8].' : '.$current->pro_bloque; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[0].' : '.$product->pro_id; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[1].' : '.$product->pro_ref; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[2].' : '.$product->pro_libelle; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[3].' : '.$product->pro_prix; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[4].' : '.$product->pro_stock; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[5].' : '.$product->pro_couleur; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[6].' : '.$product->pro_d_ajout; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[7].' : '.$product->pro_d_modif; ?> </li>
+                        <li class="list-group-item"> <?php echo $libelleTable[8].' : '.$product->pro_bloque; ?> </li>
+                    <?php
+                    }
+                    }
+                    ?>
                     </ul>
                     </div>
-                    <button type="button" aria-expanded role="button" class="close"  aria-expanded="false"  aria-controls="product_card" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <!-- <button type="button" role="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                 </div>
             </div>
             </div>

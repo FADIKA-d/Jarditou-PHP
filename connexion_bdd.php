@@ -9,8 +9,8 @@ function connexionBase()
 
    try 
    {
-        $db= new PDO('mysql:host='.$host.':3308;charset=utf8;dbname='.$base, $login, $password);
-    //    $db= new PDO('mysql:host='.$host.';charset=utf8;dbname='.$base, $login, $password);
+        // $db= new PDO('mysql:host='.$host.':3308;charset=utf8;dbname='.$base, $login, $password);
+       $db= new PDO('mysql:host='.$host.';charset=utf8;dbname='.$base, $login, $password);
        return $db;
     } 
     catch (Exception $e) 

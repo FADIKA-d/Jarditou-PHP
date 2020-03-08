@@ -90,6 +90,9 @@ if (isset($_GET['delete']))
 <button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
 <button class="btn btn-secondary"><a href="product_modif.php?pro_id=<?= $table['ID']?>">Modifier</a></button>
 <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#product_delete">Supprimer</button>
+
+<!-- modal -->
+
 <div class="modal fade" id="product_delete" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modal_delete_product" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" >
