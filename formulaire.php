@@ -1,28 +1,28 @@
 <?php
 require_once 'connexion_bdd.php';
 $today = date("Y-m-d"); // variable contenant la date du jour
-
+security($data);
 //VARIABLES DE RECUPERATION DES REPONSES DU QUESTIONNAIRE
     $lastName = $_POST['lastName'] ?? '';
-    //$lastName ?? $error
+        $lastName = security($lastName);
     $firstName = $_POST['firstName'] ?? '';
-    //$firstName ?? $error
+        $firstName = security($firstName);
     $gender = $_POST['gender'] ?? '';
-    //$gender ?? $error
+    
     $dateOfBirth = $_POST["dateOfBirth"] ?? '';
-    //$dateOfBirth ?? $error
+        
     $zipCode = $_POST['zipCode'] ?? '';
-    //$zipCode ?? $error
+        $zipCode = security($zipCode);
     $adress = $_POST['adress'] ?? '';
-    //$adress ?? $error
+        //$adress = security();
     $city = $_POST['city'] ?? '';
-    //$city ?? $error
+        //$city = security();
     $email = $_POST["email"] ?? '';
-    //$email ?? $error
+        $email = filtreEmail($email);
     $subject = $_POST["subject"] ?? '';
-    //$subject ?? $error
+
     $question = $_POST["question"] ?? '';
-    //$question ?? $error
+        $question = filtre($question);
     $agrement = $_POST["agrement"] ?? '';
     $isSubmit = isset($_POST['submit']) ? true : false;
     //echo $submit = $_POST["submit"];
