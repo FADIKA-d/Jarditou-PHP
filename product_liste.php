@@ -25,7 +25,8 @@ $productsID = array_column($products, 'pro_id');
 // var_dump(next($productsID));
 
 $card_id = $_GET['card_id'] ?? '';
-var_dump($card_id);
+// var_dump($card_id);
+
 
 ?>
 
@@ -37,6 +38,7 @@ var_dump($card_id);
 
         <div class="table-responsive mx-auto pt-5">
             <table class="table table-bordered table-striped table-hover border ">
+            <form method="POST" action="product_liste.php" id="formD" >
                 <thead>
                     <tr>
                         <th>Photo</th>
@@ -55,22 +57,25 @@ var_dump($card_id);
                 </thead>
                 <tbody>
                     <?php
-                foreach ($products as $product){
+                foreach ($products as $product)
+                {
                 // $src = "asset/img/images/".$product->pro_id . '.' . $product->pro_photo;
                 $src = "asset/img/images/".$product->pro_id;
                 // var_dump($src);
                 //  var_dump($products);
                 // $current= current($products);
-                $productsDelete = $_GET['pro_id'] ?? '';
-                
-                if (isset($productsDelete))
+                // $productsDelete = $_GET['pro_id'] ?? '';
+               
+      if (isset($_POST['count_product_delete']))
+      {
+            if (!empty($_POST['delete']))
                 {
-                    var_dump($productsDelete);
-                    $countDelete = [];
-                    // $countDelete[$product->$pro_id] = $productsDelete. 
-                    var_dump($countDelete);
-                }
+                    $productsToDelete= $_POST["delete"];                                                             
+                    }
 
+                } 
+                
+            
                                
                 ?>
                     <tr> 
@@ -91,18 +96,20 @@ var_dump($card_id);
                         <td><?php echo $product->pro_bloque; ?></td>
                         <td><a href="product_details.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-info-circle fa-2x"></i></a></td>
                         <td><a href="product_modif.php?pro_id=<?= $product->pro_id ?>"><i class="fas fa-edit fa-2x"></i></a></td>
-                        <td><a href="product_liste.php?pro_id=<?= $product->pro_id ?>"><input type="checkbox" name="<?=$product->pro_id?>"></a></td>
-                    </tr>
+                        <td><input type="checkbox" name="delete[<?=$product->pro_id?>]" value="<?=$product->pro_id?>"></td>
+                     </tr>
                     <?php
                 }
                 ?>
                 </tbody>
-                <tfoot>
+                <tfoot>GIT 
                 <tr>
                 <td colspan="12"></td>
-                <td><button type="submit" name="count_product_delete" class="btn btn-secondary" data-toggle="modal" data-target="#delete_modal">Valider</button></td>
-                </tr>
+                <!-- <td><button type="submit" formaction="product_modif.php" role="button" name="count_product_delete" value="Submit" class="btn btn-secondary" data-toggle="modal" data-target="#delete_modal">Valider</button></td> -->
+                <td><button type="button" form="formD" name="count_product_delete" value="Submit" class="btn btn-secondary" data-toggle="modal" data-target="#delete_modal">Valider</button></td>
+            </tr>
                 </tfoot>
+                </form>
             </table>
             
             <form action="product_modif.php" method="POST">
@@ -111,7 +118,7 @@ var_dump($card_id);
             </form>
         </div>
     </div>
-    <!-- FENETRE MODAL -->
+    <!-- FENETRE MODAL MODIF -->
     <div class="modal fade" id="modif_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modif_liste_modal" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" >
@@ -133,6 +140,7 @@ var_dump($card_id);
         </div>
         </div>
 
+    <!-- FENETRE MODAL DELETE -->
     <div class="modal fade" id="delete_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="delete_products_modal" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" >
@@ -142,9 +150,21 @@ var_dump($card_id);
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div class="form-group">
-                    <label for="" class="col-form-label">Voulez-vous vraiment supprimer le produit <?=$pro_id?> ?</label>
+                    <label for="productsToDelete" class="col-form-label">Voulez-vous vraiment supprimer : <?php foreach($productsToDelete as $value) { echo ' le produit '. $value. ';'; } ?> </label>
+                   
+                    <!-- <label for="" class="col-form-label">Voulez-vous vraiment supprimer : 
+                        <?php  
+                            if (isset($_POST["delete"]))
+                            {
+                                foreach($_POST["delete"] as $value)
+                                {
+                                    echo $value;
+                                }
+                            }   
+                                
+                                ?> </label> -->
                 </div>
-                <button type="button" name="delete" class="btn btn-secondary" role="button"><a href="product_details.php?pro_id=<?= $pro_id ?>&amp;delete=true">Oui</a></button>
+                <!-- <button type="button" name="deleteAsk" class="btn btn-secondary" role="button"><a href="product_liste.php?pro_id=<?= $pro_id ?>&amp;deleteAsk=true">Oui</a></button> -->
                 <button type="button" name="" class="btn btn-secondary" data-dismiss="modal">Non</button>
                 
             </div>
