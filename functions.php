@@ -112,3 +112,15 @@ function uploads($photo, $name)
     $requete->bindParam(':pro_id', $pro_id);
     return $requete->execute(); 
   }
+  function filtre()
+  {
+    FILTER_SANITIZE_EMAIL
+    FILTER_FLAG_EMAIL_UNICODE
+  }
+  function security($data)
+  {
+      $data=trim($data);
+      $data=stripslashes($data);
+      $data=strips_tags($data);
+      return $data
+  }
