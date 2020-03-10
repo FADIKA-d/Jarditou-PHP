@@ -20,24 +20,24 @@
 
 </head>
 <body>
-<div class="container">
-    <div class="card bg-dark text-white" >
+<div class="container-fluid">
+    <div class="card bg-dark text-white" style="width: 100%;">
         <img classe="card-img" src="asset/img/images/jardin.jpg" alt="card image jardin" style="width: 100%;">
         <div class="card-img-overlay">
-            <div class="card-header d-flex justify-content-around font-weight-bold text-light">
-            <p>logo</p>
-            <p>Tout le Jardin</p>
+            <div class="card-header d-flex justify-content-between font-weight-bold text-light">
+            <img classe="" src="asset/img/images/jarditou_logo.jpg" alt="card image jardin" style="width: 10%;">
+            <p>Tout pour le jardin</p>
             </div>
             <div class="card-body">
-                <nav class="navbar navbar-expand-md">
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarToggler">
+                <nav class="navbar navbar-expand-md ">
+                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse d-flex justify-content-around" id="navbarToggler">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link font-weight-bold text-light" href="index.php">Accueil</a></li>
-                        <li class="nav-item"><a class="nav-link font-weight-bold text-light" href="formulaire.php">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link font-weight-bold text-light" href="product_liste.php">Produits</a></li>
+                    <div class="collapse navbar-collapse d-flex justify-content-around " id="navbarToggler">
+                    <ul class="navbar-nav ">
+                        <li class="nav-item"><a class="nav-link font-weight-bold text-light btn btn-outline-light" href="index.php">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link font-weight-bold text-light btn btn-outline-light" href="formulaire.php">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link font-weight-bold text-light btn btn-outline-light" href="product_liste.php">Produits</a></li>
                     </ul>
                     </div>
                 </nav>

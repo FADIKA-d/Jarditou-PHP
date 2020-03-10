@@ -158,7 +158,8 @@ if(isset($fail)) // condition si echec de l'enregistrement
     ?>
 
 <div class="container-fluid">
-    <form action="product_add" method="POST" enctype="multipart/form-data">
+<div class="row justify-content-center">
+    <form action="product_add" method="POST" enctype="multipart/form-data" class="col-12 col-lg-7">
         <div class="form-group">
             <label for="pro_ref">Référence</label>
             <input type="text" name="pro_ref" id="pro_ref" value="<?=$pro_ref?>" 
@@ -170,7 +171,7 @@ if(isset($fail)) // condition si echec de l'enregistrement
             <select name="pro_cat_id" id="pro_cat_id" class="form-control <?= ($isSubmit && isset($errors['pro_cat_id'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_cat_id']))) ? 'is-valid' : '';?> ">
                 <option value="" selected>Choisir une catégorie</option>
                 <?php foreach($categories as $category) { ?>
-                    <option value= "<?= $category->cat_id ?>" <?=($pro_cat_id == $category->cat_id) ? 'selected' : '' ?>> <?= $category->cat_nom ?>
+                    <option value= "<?= $category->cat_id ?>" <?=($pro_cat_id == $category->cat_id) ? 'selected' : '' ?>> <?= $category->cat_id.'. '.$category->cat_nom ?>
                 </option>
                 <?php } ?>              
             </select>
@@ -230,5 +231,6 @@ if(isset($fail)) // condition si echec de l'enregistrement
         <button class="btn btn-secondary"><a href="product_liste.php">Retour</a></button>
         <button type="submit" name="submit" class="btn btn-secondary">Enregistrer</button>
     </form>
+</div>
 </div>
 <?php include_once "endOfPage.php" ?>

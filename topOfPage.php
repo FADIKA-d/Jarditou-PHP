@@ -16,8 +16,13 @@
 </head>
 
 <body>
+<div class="container-fluid">
+        <div class="d-flex justify-content-between">
+            <img classe="" src="asset/img/images/jarditou_logo.jpg" alt="card image jardin" style="width: 10%;">
+            <p>Tout pour le jardin</p>
+            </div></div>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarToggler">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler">
             <span class="navbar-toggler-icon"> </span>
         </button>
         <div class="collapse navbar-collapse" id="navbarToggler">
@@ -27,4 +32,5 @@
                 <li class="nav-item"><a class="nav-link" href="product_liste.php">Produits</a></li>
             </ul>
         </div>
+        
     </nav>

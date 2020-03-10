@@ -86,7 +86,7 @@ if($isSubmit && (!preg_match($pro_ref_control, $pro_ref))) //condition si : rege
 {
     $errors['pro_ref']='La référence saisie n\'est pas valide'; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-if($isSubmit && ($pro_cat_id==0))
+if($isSubmit && (!isset($pro_cat_id)))
 {
     $errors['pro_cat_id'] = 'La catégorie n\'a pas été renseignée';
 }
@@ -110,7 +110,7 @@ if($isSubmit && (!preg_match($pro_stock_control, $pro_stock))) //condition si : 
 {
     $errors['pro_stock']='La valeur du stock doit être inférieur à 11 chiffres '; //execute : le tableau errors prend la valeur entre cotes pour l'index entre crochet
 }
-
+// var_dump($errors);
 // chemin vers le fichier image si l'image existe
 $src = "asset/img/images/".$productModif['pro_id'] ;
 
@@ -123,9 +123,10 @@ if (isset($_FILES['pro_photo']))
     //     $photo = $_FILES['pro_photo'];
     // }
     $photo = $_FILES['pro_photo'] ?? '';
+    // var_dump($photo);
     $tmp = $_FILES['pro_photo']['tmp_name'];
     $path_parts= pathinfo($_FILES['pro_photo']['name']);
-    $extension = $path_parts['extension'];
+    $extension = $path_parts['extension'] ?? '';
     // var_dump($path_parts);
     $name = $_FILES['pro_photo']['name'];
     // $name = $path_parts['filename'];
@@ -150,7 +151,6 @@ if($isSubmit && count($errors)==0)
         exit();
     }    
     $fail=true;
-    var_dump($pro_bloque);
 }
 
 // debut du HTML
@@ -167,59 +167,88 @@ if(isset($fail)) // condition si echec de l'enregistrement
     ?>
 
 <div class="container-fluid">
-    <form action="product_modif.php?pro_id=<?= $pro_id ?>" method="POST" enctype="multipart/form-data">
+<div class="row justify-content-center">
+    <form action="product_modif.php?pro_id=<?= $pro_id ?>" method="POST" enctype="multipart/form-data" class="col-12 col-lg-7">
+        <div class="form-group">
+            <label for="pro_id">ID</label>
+            <input type="text" name="pro_id" id="pro_id" value="<?= $productModif['pro_id'] ?>" class="form-control" readonly >
+        </div>    
         <div class="form-group">
             <label for="pro_ref">Référence</label>
             <input type="text" name="pro_ref" id="pro_ref" value="<?= $productModif['pro_ref'] ?>" 
             class="form-control  <?= ($isSubmit && isset($errors['pro_ref'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_ref']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_ref'])) ? 'invalid-feedback' : ''?>"> <?=isset($errors['pro_ref']) ? $errors['pro_ref'] : '' ?></div>
+            <div class=" <?=($isSubmit && isset($errors['pro_ref'])) ? 'invalid-feedback' : ''?>"> <?=isset($errors['pro_ref']) ? $errors['pro_ref'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_cat_id">Catégorie</label>
             <select name="pro_cat_id" id="pro_cat_id" class="form-control <?= ($isSubmit && isset($errors['pro_cat_id'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_cat_id']))) ? 'is-valid' : '';?> ">
-            <?php foreach($categories as $category) { ?>
-                    <option value= 
-                    "<?= $category->cat_id ?>" 
-                    <?=($pro_cat_id == $category->cat_id) ? $category->cat_nom : 'choisir' ?>
+            <?php foreach($categories as $category) { 
+                if ($productModif['pro_cat_id'] == $category->cat_id)
+                {
+                ?>
+                    <option value =" <?= $category->cat_id ?>" selected > 
+                    <?= $category->cat_id.'. '.$category->cat_nom ?> 
+                    </option>
+                <?php 
+                }
+                else {
+                    ?>
+                    <option value="<?= $category->cat_id ?>" 
+                    <?php ($pro_cat_id == $category->cat_id) ? $category->cat_nom : 'choisir' ?> 
                     > 
-                    <?= $category->cat_nom ?>
+                    <?= $category->cat_id.'. '.$category->cat_nom ?>
+                    </option>
+                <?php 
+                }
+                 } 
+                 ?>              
+            </select>
+            <div class=" <?=($isSubmit && isset($errors['pro_cat_id'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_cat_id'])) ? $errors['pro_cat_id'] : '' ?></div>
+        </div>
+        <!-- 
+            <select name="pro_cat_id" id="pro_cat_id" class="form-control <?= ($isSubmit && isset($errors['pro_cat_id'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_cat_id']))) ? 'is-valid' : '';?> ">
+                <option value="" selected>Choisir une catégorie</option>
+                <?php foreach($categories as $category) { ?>
+                    <option value= "<?= $category->cat_id ?>" <?=($pro_cat_id == $category->cat_id) ? 'selected' : '' ?>> <?= $category->cat_id.'. '.$category->cat_nom ?>
                 </option>
                 <?php } ?>              
             </select>
             <div class=" <?=(isset($errors['pro_cat_id'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_cat_id'])) ? $errors['pro_cat_id'] : '' ?></div>
-        </div>
+        </div> -->
+
+
+
+
+
+
+
         <div class="form-group">
             <label for="pro_libelle">Libellé</label>
             <input type="text" name="pro_libelle" id="pro_libelle" value="<?=$productModif['pro_libelle']?>" class="form-control <?= ($isSubmit && isset($errors['pro_libelle'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_libelle']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_libelle'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_libelle'])) ? $errors['pro_libelle'] : '' ?></div>
+            <div class=" <?=($isSubmit && isset($errors['pro_libelle'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_libelle'])) ? $errors['pro_libelle'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_description">Description</label>
             <input type="text" name="pro_description" id="pro_description" value="<?=$productModif['pro_description']?>"
                 class="form-control <?= ($isSubmit && isset($errors['pro_description'])) ? 'is-invalid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_description'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_description'])) ? $errors['pro_description'] : '' ?></div>
+            <div class=" <?=($isSubmit && isset($errors['pro_description'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_description'])) ? $errors['pro_description'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_prix">Prix</label>
             <input type="text" name="pro_prix" id="pro_prix" value="<?=$productModif['pro_prix']?>" class="form-control <?= ($isSubmit && isset($errors['pro_prix'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_prix']))) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_prix'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_prix'])) ? $errors['pro_prix'] : '' ?></div>
+            <div class=" <?=($isSubmit && isset($errors['pro_prix'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_prix'])) ? $errors['pro_prix'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_stock">Stock</label>
             <input type="text" name="pro_stock" id="pro_stock" value="<?=$productModif['pro_stock']?>" class="form-control <?= ($isSubmit && isset($errors['pro_stock'])) ? 'is-invalid' : '';?> <?= ($isSubmit && ($pro_stock!='0')) ? 'is-valid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_stock'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_stock'])) ? $errors['pro_stock'] : '' ?></div>
+            <div class=" <?=($isSubmit && isset($errors['pro_stock'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_stock'])) ? $errors['pro_stock'] : '' ?></div>
         </div>
         <div class="form-group">
             <label for="pro_couleur">Couleur</label>
             <input type="text" name="pro_couleur" id="pro_couleur" value="<?=$productModif['pro_couleur']?>" class="form-control <?= ($isSubmit && isset($errors['pro_couleur'])) ? 'is-invalid' : '';?> ">
-            <div class=" <?=(isset($errors['pro_couleur'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_couleur'])) ? $errors['pro_couleur'] : '' ?></div>
+            <div class=" <?=($isSubmit && isset($errors['pro_couleur'])) ? 'invalid-feedback' : ''?>"> <?=(isset($errors['pro_couleur'])) ? $errors['pro_couleur'] : '' ?></div>
         </div>
-
-
-
-
-        
-        <div class="custom-file">
+         <div class="custom-file">
             <label for="pro_photo" class="custom-file-label" >Photo</label>
             <input type="hidden" name="pro_photo" value="<?=$productModif['pro_photo']?>">
             <input type="file" name="pro_photo" id="pro_photo"  class="custom-file-input <?= ($isSubmit && isset($errors['pro_photo'])) ? 'is-invalid' : '';?> <?= ($isSubmit && (!isset($errors['pro_photo']))) ? 'is-valid' : '';?> ">
@@ -229,17 +258,13 @@ if(isset($fail)) // condition si echec de l'enregistrement
             <div class="<?= (!isset($extension)) ? 'invalid-feedback' : '' ?>"> <?=(isset($errors['pro_photo'])) ? $errors['pro_photo'] : '' ;?> </div>
             <div class="<?= (isset($photo) && (!isset($_FILES['pro_photo']))) ? 'is-valid' : '' ; ?> "> 
                 <img class="w-auto h-auto" src="<?= (isset($photo)) && (!isset($_FILES['pro_photo'])) ? $src : '' ?>"></img>
-                <span> <?=(isset($photo) && (!isset($_FILES['pro_photo']))) ? $productModif['pro_photo'] : '' ?> </span>
+                <span> <?=($isSubmit && isset($photo) && (!isset($_FILES['pro_photo']))) ? $productModif['pro_photo'] : '' ?> </span>
             </div> 
 
             <div class="<?= ($isSubmit && (isset($_FILES['pro_photo']))) ? 'is-valid' : '';?>"> 
                 <img class="w-auto h-auto" src="<?=($isSubmit && (isset($_FILES['pro_photo']))) ?  $photoPath : '' ; ?>"></img>
                 <!-- <span><?= ($isSubmit && (isset($_FILES['pro_photo']))) ? $extension : '' ; ?></span> -->
             </div> 
-
-
-
-
 
         <div class="form-check">
             <label for="pro_bloque" class="form-check-label">Produit bloqué : </label>
@@ -253,5 +278,6 @@ if(isset($fail)) // condition si echec de l'enregistrement
         <button class="btn btn-secondary"><a href="product_liste.php">Annuler</a></button>
         <button type="submit" name="submit" class="btn btn-secondary">Enregistrer</button>
     </form>
+</div>
 </div>
 <?php include_once "endOfPage.php" ?>

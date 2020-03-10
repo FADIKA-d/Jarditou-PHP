@@ -1,32 +1,48 @@
 <?php
-require_once 'connexion_bdd.php';
+require 'functions.php';
 $today = date("Y-m-d"); // variable contenant la date du jour
-security($data);
+
 //VARIABLES DE RECUPERATION DES REPONSES DU QUESTIONNAIRE
     $lastName = $_POST['lastName'] ?? '';
-        $lastName = security($lastName);
+        
     $firstName = $_POST['firstName'] ?? '';
-        $firstName = security($firstName);
+       
     $gender = $_POST['gender'] ?? '';
     
     $dateOfBirth = $_POST["dateOfBirth"] ?? '';
         
     $zipCode = $_POST['zipCode'] ?? '';
-        $zipCode = security($zipCode);
+       
     $adress = $_POST['adress'] ?? '';
-        //$adress = security();
+     
     $city = $_POST['city'] ?? '';
-        //$city = security();
+        
     $email = $_POST["email"] ?? '';
-        $email = filtreEmail($email);
+       
     $subject = $_POST["subject"] ?? '';
 
     $question = $_POST["question"] ?? '';
-        $question = filtre($question);
+        
     $agrement = $_POST["agrement"] ?? '';
     $isSubmit = isset($_POST['submit']) ? true : false;
     //echo $submit = $_POST["submit"];
     //echo $reset = $_POST["reset"];
+
+    $data = $lastName;
+    security($data) ;
+    $lastName = security($lastName);
+    $data = $firstName ;
+    $firstName = security($firstName);
+    $data = $zipCode ;
+    $zipCode = security($zipCode);
+    $data = $adress ;
+    $adress = security($adress);
+    $data = $city ;
+    $city = security($city);
+    $data = $email ;
+    $email = security($email);
+    $data = $question;
+    $question = security($question);
 
 
 $dateOfBirthTimestamp =strtotime($dateOfBirth); // convertion de la date de naissance saissie en Timestamp (format de mesure de la date)

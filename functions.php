@@ -56,11 +56,7 @@
         }
         return false;
     }
-    function redirection() 
-    {
-        header("Location:product_liste.php");
-        exit();
-    }
+
 
     function deleteProduct($pro_id)
     {
@@ -70,6 +66,17 @@
         $requete->bindParam(':pro_id', $pro_id,PDO::PARAM_INT);
         return $requete->execute();
     }
+
+    function diversDeleteProducts($ids)
+    {
+        $db = connexionBase();
+       
+        $sqlDel = "DELETE FROM `produits` WHERE `pro_id` IN ($ids)";
+        $requete = $db->prepare($sqlDel);
+        return $requete->execute() ; 
+    }
+
+    
 
 function uploads($photo, $name)
 {
@@ -112,15 +119,21 @@ function uploads($photo, $name)
     $requete->bindParam(':pro_id', $pro_id);
     return $requete->execute(); 
   }
-  function filtre()
-  {
-    FILTER_SANITIZE_EMAIL
-    FILTER_FLAG_EMAIL_UNICODE
-  }
+
+  function redirection() 
+    {
+        header("Location:product_liste.php");
+        exit();
+    }
+//   function filtre()
+//   {
+//     FILTER_SANITIZE_EMAIL
+//     FILTER_FLAG_EMAIL_UNICODE
+//   }
   function security($data)
   {
-      $data=trim($data);
-      $data=stripslashes($data);
-      $data=strips_tags($data);
-      return $data
+      $data= trim($data);
+      $data= stripslashes($data);
+      $data= strip_tags($data);
+      return $data;
   }
